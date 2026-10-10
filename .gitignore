@@ -42,3 +42,7 @@ Thumbs.db
 expressions.txt
 replacements.txt
 
+
+# build and review artefacts
+.vercel
+screenshots/

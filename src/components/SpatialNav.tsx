@@ -37,7 +37,6 @@ export function SpatialNav({ active, hasOSS = true }: { active: string; hasOSS?:
                 aria-current={on ? "true" : undefined}
                 aria-label={it.label}
               >
-                <span className="snav__dot" aria-hidden />
                 <span className="snav__label">{it.mobileLabel || it.label}</span>
               </a>
             </li>

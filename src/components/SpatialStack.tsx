@@ -6,6 +6,8 @@ import { useSceneParallax } from "./useSpatialPointer";
  * 3D perspective. Panes sit at different Z depths and respond to pointer with
  * a single rAF-throttled transform write on the scene root (no per-pane state).
  */
+const TARGETS = ["Android", "iOS", "Desktop", "Web"];
+
 export function SpatialStack() {
   const ref = useSceneParallax<HTMLDivElement>(12);
 
@@ -15,23 +17,23 @@ export function SpatialStack() {
         {/* deepest: ambient light field */}
         <span className="spatial__glow" />
 
-        {/* back pane — signal graph */}
+        {/* back pane: the four targets */}
         <span className="spatial__contact spatial__contact--back" />
         <div className="spatial__pane spatial__pane--back">
           <span className="spatial__sheen" />
           <div className="spatial__paneHead">
-            <span className="spatial__label">Latency</span>
-            <span className="spatial__label spatial__label--unit">ms</span>
+            <span className="spatial__label">Platforms</span>
+            <span className="spatial__label spatial__label--unit">4</span>
           </div>
           <div className="spatial__bars">
-            {[38, 62, 44, 78, 56, 92, 70, 48].map((h, i) => (
-              <span key={i} style={{ height: `${h}%`, animationDelay: `${i * 0.16}s` }} />
+            {TARGETS.map((name, i) => (
+              <span key={name} style={{ height: "78%", animationDelay: `${i * 0.16}s` }} />
             ))}
           </div>
           <span className="spatial__baseline" />
         </div>
 
-        {/* mid pane — module grid */}
+        {/* mid pane: module grid */}
         <span className="spatial__contact spatial__contact--mid" />
         <div className="spatial__pane spatial__pane--mid">
           <span className="spatial__sheen" />
@@ -47,25 +49,26 @@ export function SpatialStack() {
           <span className="spatial__scan" />
         </div>
 
-        {/* front pane — the "card" */}
+        {/* front pane: the headline fact */}
         <span className="spatial__contact spatial__contact--front" />
         <div className="spatial__pane spatial__pane--front">
           <span className="spatial__sheen" />
           <div className="spatial__row spatial__row--between">
-            <span className="spatial__row">
-              <span className="spatial__dot spatial__dot--live" />
-              <span className="spatial__label">Running on device</span>
-            </span>
+            <span className="spatial__label status-live">One codebase</span>
             <span className="spatial__icon spatial__icon--sm">
               <AnimatedIcon name="chip" size={18} />
             </span>
           </div>
           <div className="spatial__readout">
-            <strong>18.4</strong>
-            <span className="spatial__label spatial__label--unit">ms / frame</span>
+            <strong>4</strong>
+            <span className="spatial__label spatial__label--unit">targets</span>
           </div>
-          <div className="spatial__meter">
-            <i />
+          <div className="spatial__targets">
+            {TARGETS.map((name) => (
+              <span key={name} className="spatial__label spatial__label--unit">
+                {name}
+              </span>
+            ))}
           </div>
         </div>
 
@@ -98,13 +101,7 @@ export function SpatialCluster() {
         <div className="spatial-slab">
           <span className="spatial__sheen" />
           <div className="spatial-slab__head">
-            <span className="spatial__dot spatial__dot--live" />
-            <span className="spatial__label">Daily runtime</span>
-          </div>
-          <div className="spatial-slab__wave">
-            {Array.from({ length: 22 }).map((_, i) => (
-              <span key={i} style={{ animationDelay: `${i * 0.07}s` }} />
-            ))}
+            <span className="spatial__label status-live">Stack</span>
           </div>
           <ul className="spatial-slab__rows">
             {["Kotlin Multiplatform", "Compose Multiplatform", "Ktor & SQLDelight"].map((t, i) => (
@@ -122,13 +119,12 @@ export function SpatialCluster() {
             <circle className="spatial-gauge__arc" cx="50" cy="50" r="42" />
           </svg>
           <div className="spatial-gauge__mid">
-            <strong>60</strong>
-            <span className="spatial__label spatial__label--unit">fps</span>
+            <strong>8</strong>
+            <span className="spatial__label spatial__label--unit">apps</span>
           </div>
         </div>
 
         <div className="spatial-tag">
-          <span className="spatial__dot" />
           <span className="spatial__label">Islamabad, PKT</span>
         </div>
 

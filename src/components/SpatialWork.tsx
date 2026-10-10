@@ -13,7 +13,7 @@ const cells = (n: number, hot: Record<number, string> = {}) =>
   Array.from({ length: n }, (_, i) => <i key={i} className={hot[i] ?? undefined} />);
 
 /** Per-project spatial diorama: layered planes over a perspective floor. */
-function WorkScene({ variant, badge }: { variant: SceneName; badge?: string }) {
+function WorkScene({ variant }: { variant: SceneName }) {
   return (
     <span className="wscene" data-scene={variant} aria-hidden>
       <span className="wscene__shadow" />
@@ -76,13 +76,6 @@ function WorkScene({ variant, badge }: { variant: SceneName; badge?: string }) {
             <span className="wcapsule" />
           </>
         )}
-        {badge && (
-          <span
-            className={`wtag ${variant === "urduspeech" || variant === "medly" ? "wtag--b" : "wtag--a"}`}
-          >
-            {badge}
-          </span>
-        )}
       </span>
     </span>
   );
@@ -97,7 +90,7 @@ export type WorkItem = {
   year: string;
   /** Per-project glyph; also selects the diorama. */
   mark: ProjectMarkName;
-  /** A verifiable fact from the repo, shown on the diorama. */
+  /** A verifiable fact, shown beside the year in the card header. */
   badge?: string;
   href?: string;
   /**
@@ -144,11 +137,14 @@ function WorkPane({ item, index }: { item: WorkItem; index: number }) {
             </span>
             <span className="work-pane__num">{String(index + 1).padStart(2, "0")}</span>
           </span>
-          <span className="work-pane__year unit">{item.year}</span>
+          <span className="work-pane__year unit">
+            {item.badge ? `${item.badge} · ` : ""}
+            {item.year}
+          </span>
         </span>
 
         <span className="work-pane__art" aria-hidden>
-          <WorkScene variant={item.mark} badge={item.badge} />
+          <WorkScene variant={item.mark} />
         </span>
 
         <span className="work-pane__body">

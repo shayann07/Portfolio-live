@@ -229,8 +229,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
       },
       // SVG first for browsers that prefer it; .ico is the legacy fallback.
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "icon", href: "/favicon.ico", sizes: "32x32" },
+      // Transparent logo. The deep red vanishes on a dark tab, so dark schemes get a lighter tint.
+      { rel: "icon", href: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      {
+        rel: "icon",
+        href: "/favicon-32-dark.png",
+        type: "image/png",
+        sizes: "32x32",
+        media: "(prefers-color-scheme: dark)",
+      },
+      { rel: "icon", href: "/favicon-48.png", type: "image/png", sizes: "48x48" },
+      { rel: "icon", href: "/favicon.ico", sizes: "16x16 32x32 48x48" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "manifest", href: "/site.webmanifest" },
       { rel: "canonical", href: SITE_URL },

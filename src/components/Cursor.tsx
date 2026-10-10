@@ -11,13 +11,21 @@ export function Cursor() {
       setEnabled(false);
       return;
     }
+    document.documentElement.dataset.customCursor = "";
     let x = window.innerWidth / 2,
       y = window.innerHeight / 2,
       rx = x,
       ry = y;
+    let shown = false;
     const move = (e: PointerEvent) => {
       x = e.clientX;
       y = e.clientY;
+      if (!shown) {
+        // Stay invisible until the first move so nothing sits at the viewport centre.
+        shown = true;
+        if (dot.current) dot.current.style.opacity = "1";
+        if (ring.current) ring.current.style.opacity = "1";
+      }
     };
     window.addEventListener("pointermove", move);
 
@@ -37,6 +45,7 @@ export function Cursor() {
     };
     document.addEventListener("mouseover", over);
     return () => {
+      delete document.documentElement.dataset.customCursor;
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", move);
       document.removeEventListener("mouseover", over);
@@ -49,12 +58,13 @@ export function Cursor() {
       <div
         ref={ring}
         className="pointer-events-none fixed left-0 top-0 z-[70] h-10 w-10 rounded-full border border-white/40 mix-blend-difference"
-        style={{ transition: "width .3s, height .3s, border-color .3s" }}
+        style={{ opacity: 0, transition: "opacity var(--dur-quick) var(--ease-out)" }}
         aria-hidden
       />
       <div
         ref={dot}
         className="pointer-events-none fixed left-0 top-0 z-[71] h-2 w-2 rounded-full bg-white mix-blend-difference"
+        style={{ opacity: 0 }}
         aria-hidden
       />
       {label && (

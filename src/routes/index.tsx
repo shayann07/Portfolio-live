@@ -7,8 +7,10 @@ import {
   useReducedMotion,
   type MotionValue,
 } from "framer-motion";
-import { memo, useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Cursor } from "@/components/Cursor";
+import { Reveal } from "@/components/Reveal";
+import { SectionHead } from "@/components/SectionHead";
 import { ShaderBackground } from "@/components/ShaderBackground";
 import { AnimatedIcon } from "@/components/AnimatedIcon";
 import { SpatialStack, SpatialCluster } from "@/components/SpatialStack";
@@ -49,7 +51,10 @@ export const Route = createFileRoute("/")({
 });
 
 /* ---------- Data ---------- */
-const CV_URL = "/muhammad_shayan_cv.pdf";
+/* A new file name on purpose: browsers and CDNs cache the old URL, so a fresh name guarantees
+   visitors get the current CV. The old path still serves the same file for links already out there. */
+const CV_URL = "/Muhammad-Shayan-Nawaz-KMP-Developer-CV.pdf";
+const CV_FILENAME = "Muhammad-Shayan-Nawaz-KMP-Developer-CV.pdf";
 
 /** Capability claims, each anchored to the project that proves it. */
 const PROOF = [
@@ -139,7 +144,7 @@ const WORK = [
     id: "w-medly",
     mark: "medly" as const,
     title: "Medly",
-    desc: "Point the camera at a paper prescription — Gemini extracts the medication list, drug names are verified against RxNorm, and two-stage alarms fire a full-screen reminder at dose time. Adherence history stays local in Room.",
+    desc: "Point the camera at a paper prescription. Gemini extracts the medication list, drug names are verified against RxNorm, and two-stage alarms fire a full-screen reminder at dose time. Adherence history stays local in Room.",
     tag: "HealthTech · Android",
     year: "2026",
     badge: "RxNorm",
@@ -150,35 +155,35 @@ const WORK = [
 
 const STORY = [
   {
-    period: "May 2026 — Now",
+    period: "May 2026 – Now",
     role: "Kotlin Multiplatform Developer",
     org: "Webscare · Sargodha",
     note: "Cross-platform apps with Compose Multiplatform and MVI across 50+ shared modules. Shipped 4 apps on Google Play, including Urdu Speech to Text and Speedometer GO, through CI/CD releases.",
     current: true,
   },
   {
-    period: "Sep 2025 — Mar 2026",
+    period: "Sep 2025 – Mar 2026",
     role: "Android Developer",
     org: "TudoNum · Portugal",
     note: "Built an on-demand services marketplace with 50+ screens: booking, provider bidding, in-app chat, payments. Integrated REST APIs with secure sign-in and offline caching.",
     current: false,
   },
   {
-    period: "Jun 2024 — Now",
+    period: "Jun 2024 – Now",
     role: "Freelance Android Developer",
     org: "Self-employed",
     note: "Delivered 3 production apps with 10K+ installs using offline-first sync, Firebase, Room and stable release workflows. Built LUP Reader, a reading aid for low-vision users in Spain that reads text aloud in 6 languages.",
     current: true,
   },
   {
-    period: "May — Aug 2025",
+    period: "May – Aug 2025",
     role: "Android Developer Intern",
     org: "Appverse Technologies · Lahore",
     note: "Built Android modules on MVVM and improved stability through refactoring and unit testing.",
     current: false,
   },
   {
-    period: "2022 — 2026",
+    period: "2022 – 2026",
     role: "BS Software Engineering",
     org: "University of Sargodha",
     note: "",
@@ -230,23 +235,6 @@ const STACK = [
 ];
 
 /* ---------- Utilities ---------- */
-function useLocalTime() {
-  const [time, setTime] = useState("");
-  useEffect(() => {
-    const fmt = () =>
-      new Intl.DateTimeFormat("en-GB", {
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZone: "Asia/Karachi",
-        hour12: false,
-      }).format(new Date());
-    setTime(fmt());
-    const id = window.setInterval(() => setTime(fmt()), 30_000);
-    return () => window.clearInterval(id);
-  }, []);
-  return time;
-}
-
 function SplitReveal({
   text,
   delay = 0,
@@ -274,7 +262,7 @@ function SplitReveal({
                       ? { duration: 0 }
                       : {
                           duration: 0.9,
-                          ease: [0.7, 0, 0.2, 1],
+                          ease: [0.22, 1, 0.36, 1],
                           delay: delay + wi * 0.04 + ci * 0.015,
                         }
                   }
@@ -291,55 +279,8 @@ function SplitReveal({
   );
 }
 
-const Reveal = memo(function Reveal({
-  children,
-  delay = 0,
-  className = "",
-}: {
-  children: ReactNode;
-  delay?: number;
-  className?: string;
-}) {
-  const ref = useReveal<HTMLDivElement>();
-  return (
-    <div
-      ref={ref}
-      className={`reveal ${className}`}
-      style={{ ["--reveal-delay" as string]: `${Math.round(delay * 1000)}ms` }}
-    >
-      {children}
-    </div>
-  );
-});
-
-function SectionHead({
-  id,
-  eyebrow,
-  title,
-  kicker,
-}: {
-  id?: string;
-  eyebrow: string;
-  title: string;
-  kicker?: string;
-}) {
-  return (
-    <div className="section-head container-x">
-      <div className="rule" aria-hidden />
-      <div className="flex items-baseline gap-3">
-        <span className="eyebrow">{eyebrow}</span>
-        {kicker && <span className="eyebrow opacity-40">/ {kicker}</span>}
-      </div>
-      <h2 id={id} className="hd-2 mt-2 max-w-3xl">
-        {title}
-      </h2>
-    </div>
-  );
-}
-
 /* ---------- Header + Nav ---------- */
 function Header({ active, hasOSS = true }: { active: string; hasOSS?: boolean }) {
-  const time = useLocalTime();
   const navItems = [
     ["About", "#about"],
     ["Path", "#story"],
@@ -349,36 +290,22 @@ function Header({ active, hasOSS = true }: { active: string; hasOSS?: boolean })
     ["Contact", "#contact"],
   ];
   return (
-    <header className="fixed inset-x-0 top-0 z-40 px-[var(--space-gutter)] py-4">
-      <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-3">
-        <a href="#top" data-cursor="Home" className="pill">
-          <span className="mark">S</span>
-          <span className="nav-link">Shayan</span>
-        </a>
-        <div className="hidden md:block">
-          <nav aria-label="Primary" className="pill">
-            {navItems.map(([label, href]) => (
-              <a
-                key={label}
-                href={href}
-                data-cursor="Jump"
-                className="nav-link"
-                data-active={active === href.slice(1)}
-                aria-current={active === href.slice(1) ? "true" : undefined}
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
-        </div>
-        <div className="hidden sm:block">
-          <div className="pill">
-            <span className="nav-link">
-              <span className="live-dot live-dot--muted" aria-hidden />
-              ISB <span className="unit">{time || "--:--"}</span>
-            </span>
-          </div>
-        </div>
+    <header className="fixed inset-x-0 top-0 z-40 hidden px-[var(--space-gutter)] py-4 md:block">
+      <div className="mx-auto flex max-w-[1280px] items-center justify-center">
+        <nav aria-label="Primary" className="pill">
+          {navItems.map(([label, href]) => (
+            <a
+              key={label}
+              href={href}
+              data-cursor="Jump"
+              className="nav-link"
+              data-active={active === href.slice(1)}
+              aria-current={active === href.slice(1) ? "true" : undefined}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
       </div>
     </header>
   );
@@ -395,9 +322,7 @@ function Hero({ scrollY }: { scrollY: MotionValue<number> }) {
     <section id="top" aria-labelledby="hero-title" className="section pt-[max(5.5rem,9vh)]">
       <div className="container-x">
         <Reveal>
-          <div className="flex items-center gap-2 eyebrow">
-            <span className="live-dot" /> Open to new projects
-          </div>
+          <div className="eyebrow status-live">Open to new projects</div>
         </Reveal>
         <div className="relative mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-12 items-end gap-8">
           <div className="md:col-span-8 relative z-10">
@@ -414,7 +339,7 @@ function Hero({ scrollY }: { scrollY: MotionValue<number> }) {
               <p className="body-md mt-6 md:mt-8 max-w-xl">
                 Kotlin Multiplatform developer shipping apps that share one codebase across Android,
                 iOS, desktop and web. 8 apps on Google Play with 70K+ installs, plus open-source
-                work in the Kotlin ecosystem. Based in Islamabad, shipping worldwide.
+                work in the Kotlin ecosystem. Based in Islamabad, working with clients worldwide.
               </p>
             </Reveal>
             <Reveal delay={0.75}>
@@ -427,7 +352,7 @@ function Hero({ scrollY }: { scrollY: MotionValue<number> }) {
                 </a>
                 <a
                   href={CV_URL}
-                  download
+                  download={CV_FILENAME}
                   className="btn btn-ghost"
                   data-cursor="Save"
                   aria-label="Download CV (PDF)"
@@ -449,7 +374,7 @@ function Hero({ scrollY }: { scrollY: MotionValue<number> }) {
         {/* Proof strip — every claim links to the project that backs it. */}
         <motion.div style={{ y: sy2 }} className="mt-12 md:mt-24">
           <h2 className="sr-only">What I build, and what proves it</h2>
-          <ul className="glass rounded-[var(--radius-lg)] md:rounded-[var(--radius-xl)] p-2 md:p-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-1 md:gap-2">
+          <ul className="proof-strip glass rounded-[var(--radius-lg)] md:rounded-[var(--radius-xl)]">
             {PROOF.map((p, i) => (
               <li key={p.claim}>
                 <Reveal delay={i * 0.08}>
@@ -457,7 +382,7 @@ function Hero({ scrollY }: { scrollY: MotionValue<number> }) {
                     href={p.href}
                     data-cursor="Proof"
                     className="proof-chip"
-                    aria-label={`${p.claim} — ${p.evidence}. Jump to the project that demonstrates it.`}
+                    aria-label={`${p.claim}: ${p.evidence}. Jump to the project that demonstrates it.`}
                   >
                     <span className="icon-box text-[color:var(--platinum)]/70 shrink-0">
                       <AnimatedIcon name={p.icon} size={20} />
@@ -484,12 +409,7 @@ function Hero({ scrollY }: { scrollY: MotionValue<number> }) {
 function About() {
   return (
     <section id="about" aria-labelledby="about-title" className="section">
-      <SectionHead
-        id="about-title"
-        eyebrow="01 / About"
-        title="Engineer's mind. Designer's obsession."
-        kicker="Craft"
-      />
+      <SectionHead id="about-title" eyebrow="01 / About" title="What I do." kicker="Craft" />
       <div className="container-x grid gap-6 md:grid-cols-12 md:gap-10 items-start">
         <div className="md:col-span-5 md:sticky md:top-28 flex justify-center md:justify-start">
           <SpatialCluster />
@@ -497,16 +417,16 @@ function About() {
         <div className="md:col-span-7 grid gap-4 md:gap-5">
           <Reveal>
             <p className="body-md">
-              I started on Android and did not stop there. These days I build Kotlin Multiplatform
-              clients on Compose Multiplatform — local-first storage, modules that do not reach into
-              each other, and screens that are pure functions of state.
+              I started on Android and kept going. Today I build Kotlin Multiplatform apps with
+              Compose Multiplatform: local-first storage, modules that stay out of each other's way,
+              and screens that are a plain function of their state.
             </p>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="body-md">
-              Lately: a 50+ module build, shader work in liquidglass, and contributions to libraries
-              other people depend on. Sharpened at Appverse Technologies, on top of a BS in Software
-              Engineering from the University of Sargodha.
+              Recently that has meant a 50+ module build, shader work in liquidglass, and pull
+              requests to libraries other people depend on. I learned the basics at Appverse
+              Technologies and finished a BS in Software Engineering at the University of Sargodha.
             </p>
           </Reveal>
           <Reveal delay={0.2}>
@@ -532,19 +452,18 @@ function Story() {
         id="story-title"
         eyebrow="02 / Path"
         title="How I got here."
-        kicker="2022 — now"
+        kicker="2022 – now"
       />
       <div className="container-x">
         <ol className="timeline">
           {STORY.map((t, i) => (
             <li key={t.role + t.period} className="timeline__item">
               <Reveal delay={i * 0.07}>
-                <span
-                  className={`timeline__dot${t.current ? " timeline__dot--live" : ""}`}
-                  aria-hidden
-                />
+                <span className="timeline__dot" aria-hidden />
                 <div className="timeline__body">
-                  <span className="unit timeline__period">{t.period}</span>
+                  <span className={`unit timeline__period${t.current ? " status-live" : ""}`}>
+                    {t.period}
+                  </span>
                   <h3 className="hd-3 mt-1">{t.role}</h3>
                   <span className="eyebrow mt-1 block">{t.org}</span>
                   {t.note && <p className="body-sm mt-3 max-w-xl">{t.note}</p>}
@@ -566,7 +485,7 @@ function Work() {
         id="work-title"
         eyebrow="03 / Selected Work"
         title="Products, shipped."
-        kicker="2025 — 2026"
+        kicker="2025 – 2026"
       />
       <div className="container-x">
         <SpatialWork items={WORK} />
@@ -585,7 +504,7 @@ function LabCard({ item }: { item: (typeof LAB)[number] }) {
       href={("href" in item && item.href) || "#contact"}
       {...(isExternal ? { target: "_blank", rel: "noreferrer noopener" } : {})}
       data-cursor={isExternal ? "Docs" : "View"}
-      aria-label={`${item.title} — ${item.note} (${item.status})${isExternal ? ". View documentation (opens in a new tab)." : ""}`}
+      aria-label={`${item.title}: ${item.note} (${item.status})${isExternal ? ". View documentation (opens in a new tab)." : ""}`}
       className="lab-card glass-soft h-full rounded-[var(--radius-lg)] md:rounded-[var(--radius-xl)] p-5 md:p-7 flex flex-col justify-between min-h-[168px] md:min-h-[220px] group"
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
@@ -679,7 +598,7 @@ function Contact() {
       <SectionHead
         id="contact-title"
         eyebrow="06 / Contact"
-        title="Let's build something calm and fast."
+        title="Have a project in mind?"
         kicker="Product work &amp; collaborations"
       />
       <div className="container-x grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
@@ -693,7 +612,7 @@ function Contact() {
                 <span className="eyebrow">Email</span>
                 <a
                   href="mailto:hello@shayxo.dev"
-                  className="hd-3 mt-2 flex min-w-0 items-center gap-3 py-1 hover:opacity-70 transition-opacity"
+                  className="hd-3 mt-2 flex min-w-0 items-center gap-3 py-1 hover:underline underline-offset-4"
                 >
                   <span className="icon-box text-[color:var(--platinum)]/70">
                     <AnimatedIcon name="mail" size={20} />
@@ -708,7 +627,7 @@ function Contact() {
                     href="https://github.com/shayann07"
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="flex min-w-0 items-center gap-3 py-1.5 body-md hover:text-[color:var(--platinum)] transition-colors"
+                    className="flex min-w-0 items-center gap-3 py-1.5 body-md hover:text-[color:var(--platinum)] hover:underline underline-offset-4"
                   >
                     <span className="shrink-0">
                       <AnimatedIcon name="github" size={18} />
@@ -720,7 +639,7 @@ function Contact() {
                     href="https://www.linkedin.com/in/shayann07"
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="flex min-w-0 items-center gap-3 py-1.5 body-md hover:text-[color:var(--platinum)] transition-colors"
+                    className="flex min-w-0 items-center gap-3 py-1.5 body-md hover:text-[color:var(--platinum)] hover:underline underline-offset-4"
                   >
                     <span className="shrink-0">
                       <AnimatedIcon name="linkedin" size={18} />
@@ -731,13 +650,9 @@ function Contact() {
                 </div>
               </div>
             </div>
-            <div className="pt-5 border-t border-white/10">
-              <div className="eyebrow flex items-center gap-2">
-                <span className="live-dot" /> Currently available
-              </div>
-              <div className="body-sm mt-2">
-                Open to freelance work, collaborations, and ambitious app ideas.
-              </div>
+            <div className="pt-5 hairline-top">
+              <div className="eyebrow status-live">Currently available</div>
+              <div className="body-sm mt-2">Open to freelance work and collaborations.</div>
             </div>
           </aside>
         </Reveal>
@@ -757,7 +672,7 @@ function Contact() {
                 required
                 maxLength={80}
                 className="input"
-                placeholder="Ada Lovelace"
+                placeholder="Your name"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
@@ -785,7 +700,7 @@ function Contact() {
                 name="subject"
                 maxLength={140}
                 className="input"
-                placeholder="What are we building?"
+                placeholder="What is it about?"
                 value={form.subject}
                 onChange={(e) => setForm({ ...form, subject: e.target.value })}
               />
@@ -799,7 +714,7 @@ function Contact() {
                 maxLength={2000}
                 aria-describedby="message-hint"
                 className="textarea"
-                placeholder="Tell me about the product, timeline, and stack…"
+                placeholder="Tell me about the project and the timeline."
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
               />
@@ -813,14 +728,14 @@ function Contact() {
                   ? "Message handed off to your mail app."
                   : state === "sending"
                     ? "Opening your mail app…"
-                    : "Sends via your mail app — no data stored."}
+                    : "Opens your mail app. Nothing is stored on this site."}
               </p>
               <button
                 type="submit"
                 disabled={disabled}
                 className="btn btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                {state === "sent" ? "Sent ✓" : state === "sending" ? "Sending…" : "Send Message"}
+                {state === "sent" ? "Sent" : state === "sending" ? "Sending…" : "Send Message"}
                 {state === "idle" && <AnimatedIcon name="arrow" size={14} />}
               </button>
             </div>
@@ -841,7 +756,7 @@ function Footer() {
             SHAYAN
           </div>
         </Reveal>
-        <div className="mt-8 md:mt-10 flex flex-col md:flex-row items-center justify-between gap-3 border-t border-white/10 pt-6 text-center md:text-left">
+        <div className="mt-8 md:mt-10 flex flex-col md:flex-row items-center justify-between gap-3 hairline-top pt-6 text-center md:text-left">
           <div className="eyebrow">© 2026 Muhammad Shayan · Islamabad · shayxo.dev</div>
           <div className="eyebrow opacity-60">Built with TanStack Start · Motion · Tailwind v4</div>
         </div>
