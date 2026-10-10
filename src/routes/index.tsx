@@ -521,7 +521,7 @@ function About() {
 /* ---------- Story ---------- */
 function Story() {
   return (
-    <section id="story" aria-labelledby="story-title" className="section">
+    <section id="story" aria-labelledby="story-title" className="section section--tight-bottom">
       <SectionHead
         id="story-title"
         eyebrow="02 / Path"
