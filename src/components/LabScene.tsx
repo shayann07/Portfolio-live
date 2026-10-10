@@ -3,8 +3,8 @@
  * work scenes (`.wscene`, `.wplane`, `.wscene__shadow`) so the two sections
  * share one spatial language rather than inventing a second.
  *
- * These three are backend systems, so the scenes depict process rather than
- * product: a settlement pass, a payment in transit, a traversal.
+ * These three depict process and architecture: sync rails, a modular graph,
+ * and shader rasterization.
  */
 
 export const LAB_SCENES = ["settlement", "rails", "graph"] as const;

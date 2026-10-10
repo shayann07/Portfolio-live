@@ -2762,7 +2762,7 @@ body {
   bottom: -14%;
 }
 
-/* settlement — a ledger with a nightly pass sweeping through it */
+/* settlement / shader — rasterization scan pass */
 .wp--ledger {
   width: 62%;
   height: 58%;

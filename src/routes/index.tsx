@@ -188,25 +188,25 @@ const STORY = [
 
 const LAB = [
   {
-    title: "Settlement Engine",
-    scene: "settlement" as const,
-    note: "Nightly ROI and team-reward settlement across three fintech products. Every read hoisted above the first write to satisfy Firestore's transaction contract, an idempotency log consulted inside that same transaction so a retried run can never double-credit, and atomic field increments carrying 673 lines of payout logic.",
-    status: "Nightly",
-    icon: "gear",
-  },
-  {
-    title: "Deposit Rails",
+    title: "Billing & sync backend (InvoiceOne)",
     scene: "rails" as const,
-    note: "Crypto deposit and withdrawal rails over CoinPayments. Every payload signed HMAC-SHA512, the nonce minted inside a Firestore transaction so a replayed request cannot reuse it, and an IPN webhook that credits balances only past the confirmation threshold — inside a transaction of its own.",
+    note: "The Laravel service behind InvoiceOne: Google Play subscription billing that acknowledges purchases and survives renewal and refund edge cases, delta sync that pulls a device's state in a fixed number of queries, and PDF generation for invoices, receipts and statements.",
     status: "Live",
     icon: "bolt",
   },
   {
-    title: "Graph Aggregator",
+    title: "Multi-module architecture",
     scene: "graph" as const,
-    note: "A ten-minute sweep over the referral graph, walked breadth-first by depth. Cursor-paginated so it never holds the collection in memory, membership queries chunked to Firestore's ten-element ceiling, and fan-out held inside a parallelism window so a few thousand users cannot exhaust the pool.",
-    status: "Every 10 min",
+    note: "A Gradle convention plugin per module type, feature modules split into api and impl so no feature reaches into another's internals, and one composition root. Boring where it counts, so changes stay local.",
+    status: "50+ modules",
     icon: "orbit",
+  },
+  {
+    title: "Shaders in Compose (liquidglass)",
+    scene: "settlement" as const,
+    note: "One AGSL/SkSL shader doing refraction, dispersion and rim lighting, fitted to measurements from real captures rather than tuned by eye, with a graceful fallback below Android 13.",
+    status: "Maven Central",
+    icon: "spark",
   },
 ];
 
