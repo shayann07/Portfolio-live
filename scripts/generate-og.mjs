@@ -163,8 +163,7 @@ function svg() {
   <rect x="72" y="356" width="74" height="3" rx="1.5" fill="${CRIMSON_LIFT}"/>
 
   <!-- role -->
-  ${text("Software Engineer — Kotlin Multiplatform,", { font: "body", size: 25, x: 71, y: 412, fill: "rgba(237,235,222,0.8)" })}
-  ${text("backend services, and on-device ML.", { font: "body", size: 25, x: 71, y: 448, fill: "rgba(237,235,222,0.8)" })}
+  ${text("Kotlin Multiplatform Developer", { font: "body", size: 28, x: 71, y: 418, fill: "rgba(237,235,222,0.88)" })}
 
   <!-- footer rail -->
   <rect x="72" y="575.5" width="${railX - 72 - 2}" height="1" fill="${COTTON}" fill-opacity="0.12"/>
