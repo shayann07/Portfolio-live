@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Internal design-system gallery, not portfolio content
+Disallow: /icons
+
+Sitemap: https://shayxo.dev/sitemap.xml

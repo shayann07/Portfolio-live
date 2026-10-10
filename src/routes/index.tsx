@@ -1,22 +1,40 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { motion, useScroll, useSpring, useTransform, useReducedMotion, type MotionValue } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useReducedMotion,
+  type MotionValue,
+} from "framer-motion";
 import { memo, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { Cursor } from "@/components/Cursor";
 import { ShaderBackground } from "@/components/ShaderBackground";
 import { AnimatedIcon } from "@/components/AnimatedIcon";
 import { SpatialStack, SpatialCluster } from "@/components/SpatialStack";
 import { SpatialWork } from "@/components/SpatialWork";
+import { LabScene } from "@/components/LabScene";
+import { useSpatialPointer } from "@/components/useSpatialPointer";
 import { SpatialNav } from "@/components/SpatialNav";
 import { useReveal } from "@/hooks/useReveal";
 import { useSectionNav, scrollToHash } from "@/hooks/useSectionNav";
+import { useIdleScenes } from "@/hooks/useIdleScenes";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Muhammad Shayan — Mobile Engineer" },
-      { name: "description", content: "Portfolio of Muhammad Shayan — Mobile Engineer building Android, Flutter, and on-device ML products from Karachi." },
-      { property: "og:title", content: "Muhammad Shayan — Mobile Engineer" },
-      { property: "og:description", content: "Android, Flutter, on-device ML, and offline-first mobile systems by Muhammad Shayan." },
+      { title: "Muhammad Shayan — Software Engineer" },
+      {
+        name: "description",
+        content:
+          "Software engineer building Kotlin Multiplatform apps, backend services and on-device ML. Android, desktop, web and iOS — shipped end to end from Islamabad.",
+      },
+      { property: "og:title", content: "Muhammad Shayan — Software Engineer" },
+      {
+        property: "og:description",
+        content:
+          "Kotlin Multiplatform, backend services, payment rails, and on-device ML — product systems built end to end by Muhammad Shayan.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -25,33 +43,200 @@ export const Route = createFileRoute("/")({
 });
 
 /* ---------- Data ---------- */
-const METRICS = [
-  { v: "3+", k: "Live Apps", icon: "bolt" },
-  { v: "10k+", k: "Installs", icon: "download" },
-  { v: "99%+", k: "Stability", icon: "spark" },
-  { v: "60%", k: "Perf Gain", icon: "gear" },
+const CV_URL = "/muhammad_shayan_cv.pdf";
+
+/** Capability claims, each anchored to the project that proves it. */
+const PROOF = [
+  {
+    claim: "Kotlin Multiplatform",
+    evidence: "One codebase, 4 targets",
+    href: "#w-invoiceone",
+    icon: "orbit",
+  },
+  {
+    claim: "Front to back",
+    evidence: "Client, API, admin panel",
+    href: "#w-streambox",
+    icon: "layers",
+  },
+  { claim: "On-device ML", evidence: "PyTorch Mobile · <50ms", href: "#w-leafbloom", icon: "chip" },
+  {
+    claim: "Payments & billing",
+    evidence: "Stripe · CoinPayments",
+    href: "#w-medicare",
+    icon: "wave",
+  },
 ];
 
 const WORK = [
-  { title: "AI Trust Ledger", desc: "Fintech: ROI cycles, portfolio tracking, resilient financial flows.", tag: "Fintech · Kotlin", year: "2025" },
-  { title: "LeafBloom", desc: "On-device plant disease diagnosis. TFLite + Compose + CameraX.", tag: "Vision ML · Android", year: "2024" },
-  { title: "GitPulse", desc: "Flutter GitHub analytics with GraphQL and live sync.", tag: "Dev Tool · Flutter", year: "2024" },
-  { title: "Medicare", desc: "HealthTech: appointments, chat, Stripe payments, pharmacy.", tag: "HealthTech · Flutter", year: "2023" },
+  {
+    id: "w-medly",
+    mark: "medly" as const,
+    title: "Medly",
+    desc: "Point the camera at a paper prescription — Gemini extracts the medication list, drug names are verified against RxNorm, and two-stage alarms fire a full-screen reminder at dose time. Adherence history stays local in Room.",
+    tag: "HealthTech · Kotlin",
+    year: "2026",
+    badge: "RxNorm",
+    href: "https://play.google.com/store/apps/details?id=com.medly.reminder&hl=en-US",
+    link: "store" as const,
+  },
+  {
+    id: "w-invoiceone",
+    mark: "invoiceone" as const,
+    title: "InvoiceOne",
+    desc: "Local-first invoicing on a Kotlin Multiplatform base — 34 Gradle modules, Android alongside desktop, web, and iOS targets, every feature split api/impl behind an MVI shell.",
+    tag: "Multiplatform · Kotlin",
+    year: "2026",
+    badge: "34 modules",
+    href: "#contact",
+    link: "contact" as const,
+  },
+  {
+    id: "w-leafbloom",
+    mark: "leafbloom" as const,
+    title: "LeafBloom",
+    desc: "Crop disease and pest diagnosis running entirely on the handset — PyTorch Mobile Lite under 50ms per frame over CameraX, with Gemini botanical consults and Open-Meteo microclimate context layered on top.",
+    tag: "Vision ML · Android",
+    year: "2026",
+    badge: "<50ms",
+    href: "https://github.com/shayann07/LeafBloom",
+    link: "source" as const,
+  },
+  {
+    id: "w-upscaly",
+    mark: "upscaly" as const,
+    title: "Upscaly",
+    desc: "Real-ESRGAN image and video upscaling on your own GPU — batch queues, a VRAM governor that keeps the machine alive, and an extensible model catalogue. Nothing uploaded, no account. An Android port runs the same models on ncnn + Vulkan.",
+    tag: "Desktop · Real-ESRGAN",
+    year: "2026",
+    badge: "Local GPU",
+    href: "https://github.com/shayann07/Upscaly",
+    link: "source" as const,
+  },
+  {
+    id: "w-streambox",
+    mark: "streambox" as const,
+    title: "StreamBox",
+    desc: "IPTV and VOD across phone, tablet, Android TV and Fire TV on a Media3 pipeline — HLS/DASH/RTSP, multi-screen matrix playback, EPG grids and OpenVPN tunnelling, paired with a CodeIgniter 4 management panel.",
+    tag: "Streaming · Android + PHP",
+    year: "2026",
+    badge: "Fire TV",
+    href: "https://github.com/shayann07/streambox",
+    link: "source" as const,
+  },
+  {
+    id: "w-medicare",
+    mark: "medicare" as const,
+    title: "Medicare",
+    desc: "Flutter telehealth on GetX — browse specialists, book against dynamic 20-minute slots, pay through the native Stripe sheet, and get disclaimer-governed triage from a GPT-4o-mini assistant.",
+    tag: "HealthTech · Flutter",
+    year: "2025",
+    badge: "Stripe",
+    href: "https://github.com/shayann07/medicare_app_flutter",
+    link: "source" as const,
+  },
+  {
+    id: "w-gitpulse",
+    mark: "gitpulse" as const,
+    title: "GitPulse",
+    desc: "Schedules GitHub commits from an Android handset. GitHub OAuth, the access token sealed in EncryptedSharedPreferences, and background workers that keep a contribution streak ticking over.",
+    tag: "Dev Tool · Kotlin",
+    year: "2025",
+    badge: "OAuth",
+    href: "#contact",
+    link: "contact" as const,
+  },
+];
+
+const STORY = [
+  {
+    period: "May 2026 — Now",
+    role: "Software Engineer",
+    org: "Webscare · Sargodha",
+    note: "Feature work end to end — clean UI, stable flows, API integration, and release-ready updates.",
+    current: true,
+  },
+  {
+    period: "Jun 2024 — Now",
+    role: "Freelance Software Engineer",
+    org: "Self-employed",
+    note: "Three production apps with 10k+ combined installs. Offline-first sync over Room and Firebase, multi-module architecture, CI/CD.",
+    current: true,
+  },
+  {
+    period: "May — Aug 2025",
+    role: "Android Developer Intern",
+    org: "Appverse Technologies",
+    note: "Built Android modules on MVVM, refactored for stability, and integrated REST and GraphQL APIs with caching.",
+    current: false,
+  },
+  {
+    period: "2022 — 2026",
+    role: "BS Software Engineering",
+    org: "University of Sargodha",
+    note: "",
+    current: false,
+  },
 ];
 
 const LAB = [
-  { title: "VectorMap.os", note: "Offline-first vector maps", status: "WIP", icon: "map" },
-  { title: "ShaderPlay Flutter", note: "GLSL runtime in Skia", status: "Done", icon: "wave" },
-  { title: "TensorFlow.Mobile", note: "Micro-model tooling", status: "Beta", icon: "chip" },
+  {
+    title: "Settlement Engine",
+    scene: "settlement" as const,
+    note: "Nightly ROI and team-reward settlement across three fintech products. Every read hoisted above the first write to satisfy Firestore's transaction contract, an idempotency log consulted inside that same transaction so a retried run can never double-credit, and atomic field increments carrying 673 lines of payout logic.",
+    status: "Nightly",
+    icon: "gear",
+  },
+  {
+    title: "Deposit Rails",
+    scene: "rails" as const,
+    note: "Crypto deposit and withdrawal rails over CoinPayments. Every payload signed HMAC-SHA512, the nonce minted inside a Firestore transaction so a replayed request cannot reuse it, and an IPN webhook that credits balances only past the confirmation threshold — inside a transaction of its own.",
+    status: "Live",
+    icon: "bolt",
+  },
+  {
+    title: "Graph Aggregator",
+    scene: "graph" as const,
+    note: "A ten-minute sweep over the referral graph, walked breadth-first by depth. Cursor-paginated so it never holds the collection in memory, membership queries chunked to Firestore's ten-element ceiling, and fan-out held inside a parallelism window so a few thousand users cannot exhaust the pool.",
+    status: "Every 10 min",
+    icon: "orbit",
+  },
 ];
 
-const STACK = ["Android", "Kotlin", "Jetpack Compose", "Flutter", "Dart", "TensorFlow Lite", "Firebase", "GraphQL", "MVVM", "Stripe"];
+const STACK = [
+  "Kotlin Multiplatform",
+  "Kotlin",
+  "Jetpack Compose",
+  "Flutter",
+  "TypeScript",
+  "Node.js",
+  "Express",
+  "Firebase",
+  "Cloud Functions",
+  "PostgreSQL",
+  "REST",
+  "GraphQL",
+  "Stripe",
+  "PyTorch Mobile",
+  "TensorFlow Lite",
+  "MediaPipe",
+  "Room",
+  "Media3",
+  "Docker",
+  "CI/CD",
+];
 
 /* ---------- Utilities ---------- */
-function useKarachiTime() {
+function useLocalTime() {
   const [time, setTime] = useState("");
   useEffect(() => {
-    const fmt = () => new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Karachi", hour12: false }).format(new Date());
+    const fmt = () =>
+      new Intl.DateTimeFormat("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Asia/Karachi",
+        hour12: false,
+      }).format(new Date());
     setTime(fmt());
     const id = window.setInterval(() => setTime(fmt()), 30_000);
     return () => window.clearInterval(id);
@@ -59,27 +244,40 @@ function useKarachiTime() {
   return time;
 }
 
-function SplitReveal({ text, delay = 0, className = "" }: { text: string; delay?: number; className?: string }) {
+function SplitReveal({
+  text,
+  delay = 0,
+  className = "",
+}: {
+  text: string;
+  delay?: number;
+  className?: string;
+}) {
   return (
     <span className={className}>
-      <span className="sr-only">{text}</span>
-      <span aria-hidden="true">
-      {text.split(" ").map((word, wi) => (
-        <span key={`${word}-${wi}`} className="inline-block whitespace-nowrap">
-          {Array.from(word).map((ch, ci) => (
-            <span key={`${ch}-${ci}`} className="char-mask">
-              <motion.span
-                initial={{ y: "110%" }}
-                animate={{ y: "0%" }}
-                transition={{ duration: 0.9, ease: [0.7, 0, 0.2, 1], delay: delay + wi * 0.04 + ci * 0.015 }}
-              >
-                {ch}
-              </motion.span>
-            </span>
-          ))}
-          {wi < text.split(" ").length - 1 && <span className="inline-block">&nbsp;</span>}
-        </span>
-      ))}
+      {/* No sr-only twin: it duplicated the name in the h1's text content
+          ("MuhammadMuhammad"). The h1 carries an aria-label instead. */}
+      <span>
+        {text.split(" ").map((word, wi) => (
+          <span key={`${word}-${wi}`} className="inline-block whitespace-nowrap">
+            {Array.from(word).map((ch, ci) => (
+              <span key={`${ch}-${ci}`} className="char-mask">
+                <motion.span
+                  initial={{ y: "110%" }}
+                  animate={{ y: "0%" }}
+                  transition={{
+                    duration: 0.9,
+                    ease: [0.7, 0, 0.2, 1],
+                    delay: delay + wi * 0.04 + ci * 0.015,
+                  }}
+                >
+                  {ch}
+                </motion.span>
+              </span>
+            ))}
+            {wi < text.split(" ").length - 1 && <span className="inline-block">&nbsp;</span>}
+          </span>
+        ))}
       </span>
     </span>
   );
@@ -96,13 +294,27 @@ const Reveal = memo(function Reveal({
 }) {
   const ref = useReveal<HTMLDivElement>();
   return (
-    <div ref={ref} className={`reveal ${className}`} style={{ ["--reveal-delay" as string]: `${Math.round(delay * 1000)}ms` }}>
+    <div
+      ref={ref}
+      className={`reveal ${className}`}
+      style={{ ["--reveal-delay" as string]: `${Math.round(delay * 1000)}ms` }}
+    >
       {children}
     </div>
   );
 });
 
-function SectionHead({ id, eyebrow, title, kicker }: { id?: string; eyebrow: string; title: string; kicker?: string }) {
+function SectionHead({
+  id,
+  eyebrow,
+  title,
+  kicker,
+}: {
+  id?: string;
+  eyebrow: string;
+  title: string;
+  kicker?: string;
+}) {
   return (
     <div className="section-head container-x">
       <div className="rule" aria-hidden />
@@ -110,14 +322,16 @@ function SectionHead({ id, eyebrow, title, kicker }: { id?: string; eyebrow: str
         <span className="eyebrow">{eyebrow}</span>
         {kicker && <span className="eyebrow opacity-40">/ {kicker}</span>}
       </div>
-      <h2 id={id} className="hd-2 mt-2 max-w-3xl">{title}</h2>
+      <h2 id={id} className="hd-2 mt-2 max-w-3xl">
+        {title}
+      </h2>
     </div>
   );
 }
 
 /* ---------- Header + Nav ---------- */
 function Header({ active }: { active: string }) {
-  const time = useKarachiTime();
+  const time = useLocalTime();
   return (
     <header className="fixed inset-x-0 top-0 z-40 px-[var(--space-gutter)] py-4">
       <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-3">
@@ -127,7 +341,13 @@ function Header({ active }: { active: string }) {
         </a>
         <div className="hidden md:block">
           <nav aria-label="Primary" className="pill">
-            {[["Work", "#work"], ["Lab", "#lab"], ["About", "#about"], ["Contact", "#contact"]].map(([label, href]) => (
+            {[
+              ["About", "#about"],
+              ["Path", "#story"],
+              ["Work", "#work"],
+              ["Lab", "#lab"],
+              ["Contact", "#contact"],
+            ].map(([label, href]) => (
               <a
                 key={label}
                 href={href}
@@ -145,7 +365,7 @@ function Header({ active }: { active: string }) {
           <div className="pill">
             <span className="nav-link">
               <span className="live-dot live-dot--muted" aria-hidden />
-              KHI <span className="unit">{time || "--:--"}</span>
+              ISB <span className="unit">{time || "--:--"}</span>
             </span>
           </div>
         </div>
@@ -166,18 +386,29 @@ function Hero({ scrollY }: { scrollY: MotionValue<number> }) {
       <div className="container-x">
         <Reveal>
           <div className="flex items-center gap-2 eyebrow">
-            <span className="live-dot" /> Available · Q3 2026
+            <span className="live-dot" /> Open to new projects
           </div>
         </Reveal>
         <div className="relative mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-12 items-end gap-8">
           <div className="md:col-span-8 relative z-10">
-            <h1 id="hero-title" className="hd-hero">
-              <span className="block"><SplitReveal text="Muhammad" /></span>
-              <span className="block text-[color:var(--mid)]"><SplitReveal text="Shayan." delay={0.15} /></span>
+            <h1 id="hero-title" className="hd-hero" aria-label="Muhammad Shayan">
+              <span className="block">
+                <SplitReveal text="Muhammad" />
+                {/* Keeps the two blocks from concatenating to "MuhammadShayan." in text content. */}{" "}
+              </span>
+              <span className="block text-[color:var(--mid)]">
+                <SplitReveal text="Shayan." delay={0.15} />
+              </span>
             </h1>
             <Reveal delay={0.6}>
               <p className="body-md mt-6 md:mt-8 max-w-xl">
-                Mobile Engineer building <span className="text-[color:var(--platinum)]">Android, Flutter and on-device ML products</span> — from offline-first fintech to camera-driven vision apps. Based in Karachi, shipping worldwide.
+                Software engineer who ships{" "}
+                <span className="text-[color:var(--platinum)]">
+                  whole systems, not just screens
+                </span>{" "}
+                — Kotlin Multiplatform clients across Android, desktop, web and iOS, the services
+                and payment rails behind them, and on-device ML where it earns its place. Based in
+                Islamabad, shipping worldwide.
               </p>
             </Reveal>
             <Reveal delay={0.75}>
@@ -188,27 +419,55 @@ function Hero({ scrollY }: { scrollY: MotionValue<number> }) {
                 <a href="#work" className="btn btn-ghost" data-cursor="Scroll">
                   See Work <AnimatedIcon name="arrow" size={16} />
                 </a>
+                <a
+                  href={CV_URL}
+                  download
+                  className="btn btn-ghost"
+                  data-cursor="Save"
+                  aria-label="Download CV (PDF)"
+                >
+                  <AnimatedIcon name="download" size={16} /> CV
+                </a>
               </div>
             </Reveal>
           </div>
-          <motion.div style={{ y: sy1 }} className="md:col-span-4 flex justify-center md:justify-end" aria-hidden>
+          <motion.div
+            style={{ y: sy1 }}
+            className="md:col-span-4 flex justify-center md:justify-end"
+            aria-hidden
+          >
             <SpatialStack />
           </motion.div>
         </div>
 
-        {/* Floating meta strip */}
-        <motion.div style={{ y: sy2 }} className="mt-12 md:mt-24 glass rounded-[var(--radius-lg)] md:rounded-[var(--radius-xl)] p-4 md:p-6 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {METRICS.map((m, i) => (
-            <Reveal key={m.k} delay={i * 0.08}>
-              <div className="flex min-w-0 items-center gap-3 md:gap-4">
-                <span className="icon-box text-[color:var(--platinum)]/70"><AnimatedIcon name={m.icon} size={22} /></span>
-                <div className="min-w-0">
-                  <div className="stat-num">{m.v}</div>
-                  <div className="eyebrow mt-1 truncate">{m.k}</div>
-                </div>
-              </div>
-            </Reveal>
-          ))}
+        {/* Proof strip — every claim links to the project that backs it. */}
+        <motion.div style={{ y: sy2 }} className="mt-12 md:mt-24">
+          <h2 className="sr-only">What I build, and what proves it</h2>
+          <ul className="glass rounded-[var(--radius-lg)] md:rounded-[var(--radius-xl)] p-2 md:p-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-1 md:gap-2">
+            {PROOF.map((p, i) => (
+              <li key={p.claim}>
+                <Reveal delay={i * 0.08}>
+                  <a
+                    href={p.href}
+                    data-cursor="Proof"
+                    className="proof-chip"
+                    aria-label={`${p.claim} — ${p.evidence}. Jump to the project that demonstrates it.`}
+                  >
+                    <span className="icon-box text-[color:var(--platinum)]/70 shrink-0">
+                      <AnimatedIcon name={p.icon} size={20} />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="proof-chip__claim">{p.claim}</span>
+                      <span className="proof-chip__evidence">{p.evidence}</span>
+                    </span>
+                    <span className="proof-chip__arrow" aria-hidden>
+                      <AnimatedIcon name="arrow" size={14} />
+                    </span>
+                  </a>
+                </Reveal>
+              </li>
+            ))}
+          </ul>
         </motion.div>
       </div>
     </section>
@@ -218,29 +477,81 @@ function Hero({ scrollY }: { scrollY: MotionValue<number> }) {
 /* ---------- About ---------- */
 function About() {
   return (
-    <section id="about" aria-labelledby="about-title" className="section section--tight-bottom">
-      <SectionHead id="about-title" eyebrow="01 / About" title="Engineer's mind. Designer's obsession." kicker="Craft" />
+    <section id="about" aria-labelledby="about-title" className="section">
+      <SectionHead
+        id="about-title"
+        eyebrow="01 / About"
+        title="Engineer's mind. Designer's obsession."
+        kicker="Craft"
+      />
       <div className="container-x grid gap-6 md:grid-cols-12 md:gap-10 items-start">
         <div className="md:col-span-5 md:sticky md:top-28 flex justify-center md:justify-start">
           <SpatialCluster />
         </div>
         <div className="md:col-span-7 grid gap-4 md:gap-5">
-        <Reveal>
-          <p className="body-md">
-            Four years shipping production mobile apps across fintech, health, and creator tools. I favour architectures that are boring where it counts — offline-first, testable, observable — and expressive where users touch them. Kotlin and Flutter are my daily languages; TensorFlow Lite is where I have the most fun.
-          </p>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <p className="body-md">
-            I write my own animation systems, sweat over 60fps on mid-range Androids, and believe good interfaces feel physical. Currently open to senior mobile roles and long-term product partnerships.
-          </p>
-        </Reveal>
-        <Reveal delay={0.2}>
-          <ul className="flex flex-wrap gap-2" aria-label="Core technologies">
-            {STACK.slice(0, 6).map((s) => <li key={s} className="chip">{s}</li>)}
-          </ul>
-        </Reveal>
+          <Reveal>
+            <p className="body-md">
+              I started on Android and did not stop there. These days a project usually means the
+              whole thing: a Kotlin Multiplatform client, the Express and Firebase services
+              underneath it, the scheduled jobs that settle balances overnight, the payment rail,
+              and the admin panel someone actually runs the business from. Health, agriculture,
+              streaming, fintech, business tooling, desktop.
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="body-md">
+              I favour architectures that are boring where it counts — local-first storage, modules
+              that do not reach into each other, screens that are pure functions of their state —
+              and expressive where people actually touch them. Lately: a 34-module Kotlin
+              Multiplatform build, Real-ESRGAN on a phone GPU through Vulkan, sub-50ms vision
+              inference over a CameraX stream. Sharpened at Appverse Technologies, on top of a BS in
+              Software Engineering from the University of Sargodha.
+            </p>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <ul className="flex flex-wrap gap-2" aria-label="Core technologies">
+              {STACK.slice(0, 6).map((s) => (
+                <li key={s} className="chip">
+                  {s}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Story ---------- */
+function Story() {
+  return (
+    <section id="story" aria-labelledby="story-title" className="section">
+      <SectionHead
+        id="story-title"
+        eyebrow="02 / Path"
+        title="How I got here."
+        kicker="2022 — now"
+      />
+      <div className="container-x">
+        <ol className="timeline">
+          {STORY.map((t, i) => (
+            <li key={t.role + t.period} className="timeline__item">
+              <Reveal delay={i * 0.07}>
+                <span
+                  className={`timeline__dot${t.current ? " timeline__dot--live" : ""}`}
+                  aria-hidden
+                />
+                <div className="timeline__body">
+                  <span className="unit timeline__period">{t.period}</span>
+                  <h3 className="hd-3 mt-1">{t.role}</h3>
+                  <span className="eyebrow mt-1 block">{t.org}</span>
+                  {t.note && <p className="body-sm mt-3 max-w-xl">{t.note}</p>}
+                </div>
+              </Reveal>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
@@ -250,7 +561,12 @@ function About() {
 function Work() {
   return (
     <section id="work" aria-labelledby="work-title" className="section">
-      <SectionHead id="work-title" eyebrow="02 / Selected Work" title="Products, shipped." kicker="2023 — 2025" />
+      <SectionHead
+        id="work-title"
+        eyebrow="03 / Selected Work"
+        title="Products, shipped."
+        kicker="2025 — 2026"
+      />
       <div className="container-x">
         <SpatialWork items={WORK} />
       </div>
@@ -258,33 +574,57 @@ function Work() {
   );
 }
 
+/** One Lab card. Owns a pointer hook so its diorama parallaxes like the work panes. */
+function LabCard({ item }: { item: (typeof LAB)[number] }) {
+  const { ref, onPointerMove, onPointerLeave } = useSpatialPointer<HTMLAnchorElement>(7);
+  return (
+    <a
+      ref={ref}
+      href="#contact"
+      data-cursor="View"
+      aria-label={`${item.title} — ${item.note} (${item.status})`}
+      className="lab-card glass-soft h-full rounded-[var(--radius-lg)] md:rounded-[var(--radius-xl)] p-5 md:p-7 flex flex-col justify-between min-h-[168px] md:min-h-[220px] group"
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
+      onBlur={onPointerLeave}
+    >
+      <span className="flex items-center justify-between">
+        <span className="icon-box text-[color:var(--platinum)]/70 icon-float">
+          <AnimatedIcon name={item.icon} size={20} />
+        </span>
+        <span className="eyebrow">{item.status}</span>
+      </span>
+
+      <span className="lab-card__art" aria-hidden>
+        <LabScene variant={item.scene} />
+      </span>
+
+      <span className="block mt-6">
+        <h3 className="hd-3 block">{item.title}</h3>
+        <span className="body-sm mt-2 block">{item.note}</span>
+        <span className="mt-3 flex items-center gap-2 eyebrow text-[color:var(--platinum)] opacity-60 md:opacity-0 md:group-hover:opacity-100 md:group-focus-visible:opacity-100 transition-opacity">
+          Explore <AnimatedIcon name="arrow" size={14} />
+        </span>
+      </span>
+    </a>
+  );
+}
+
 /* ---------- Lab ---------- */
 function Lab() {
   return (
     <section id="lab" aria-labelledby="lab-title" className="section">
-      <SectionHead id="lab-title" eyebrow="03 / Lab" title="Experiments in motion." kicker="Open source" />
+      <SectionHead
+        id="lab-title"
+        eyebrow="04 / Lab"
+        title="Under the hood."
+        kicker="Infrastructure &amp; internals"
+      />
       <ul className="container-x grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
         {LAB.map((l, i) => (
           <li key={l.title} className="h-full">
             <Reveal delay={i * 0.08} className="h-full">
-              <a
-                href="#contact"
-                data-cursor="View"
-                aria-label={`${l.title} — ${l.note} (${l.status})`}
-                className="glass-soft h-full rounded-[var(--radius-lg)] md:rounded-[var(--radius-xl)] p-5 md:p-7 flex flex-col justify-between min-h-[168px] md:min-h-[220px] group"
-              >
-                <span className="flex items-center justify-between">
-                  <span className="icon-box text-[color:var(--platinum)]/70 icon-float"><AnimatedIcon name={l.icon} size={20} /></span>
-                  <span className="eyebrow">{l.status}</span>
-                </span>
-                <span className="block mt-6">
-                  <span className="hd-3 block">{l.title}</span>
-                  <span className="body-sm mt-2 block">{l.note}</span>
-                  <span className="mt-3 flex items-center gap-2 eyebrow text-[color:var(--platinum)] opacity-60 md:opacity-0 md:group-hover:opacity-100 md:group-focus-visible:opacity-100 transition-opacity">
-                    Explore <AnimatedIcon name="arrow" size={14} />
-                  </span>
-                </span>
-              </a>
+              <LabCard item={l} />
             </Reveal>
           </li>
         ))}
@@ -301,7 +641,9 @@ function Ribbon() {
         {Array.from({ length: 2 }).map((_, k) => (
           <div key={k} className="marquee__item">
             {STACK.map((s, i) => (
-              <span key={`${k}-${i}`} className={i % 2 ? "marquee__item--outline" : ""}>{s}</span>
+              <span key={`${k}-${i}`} className={i % 2 ? "marquee__item--outline" : ""}>
+                {s}
+              </span>
             ))}
           </div>
         ))}
@@ -331,28 +673,55 @@ function Contact() {
 
   return (
     <section id="contact" aria-labelledby="contact-title" className="section">
-      <SectionHead id="contact-title" eyebrow="04 / Contact" title="Let's build something calm and fast." kicker="Reply in ~24h" />
+      <SectionHead
+        id="contact-title"
+        eyebrow="05 / Contact"
+        title="Let's build something calm and fast."
+        kicker="Product work &amp; collaborations"
+      />
       <div className="container-x grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
         <Reveal className="lg:col-span-4">
-          <aside aria-label="Contact details" className="glass-soft h-full rounded-[var(--radius-lg)] md:rounded-[var(--radius-xl)] p-5 md:p-8 flex flex-col justify-between gap-8 md:min-h-[420px]">
+          <aside
+            aria-label="Contact details"
+            className="glass-soft h-full rounded-[var(--radius-lg)] md:rounded-[var(--radius-xl)] p-5 md:p-8 flex flex-col justify-between gap-8 md:min-h-[420px]"
+          >
             <div className="space-y-6">
               <div>
                 <span className="eyebrow">Email</span>
-                <a href="mailto:hello@shayxo.dev" className="hd-3 mt-2 flex min-w-0 items-center gap-3 hover:opacity-70 transition-opacity">
-                  <span className="icon-box text-[color:var(--platinum)]/70"><AnimatedIcon name="mail" size={20} /></span>
+                <a
+                  href="mailto:hello@shayxo.dev"
+                  className="hd-3 mt-2 flex min-w-0 items-center gap-3 py-1 hover:opacity-70 transition-opacity"
+                >
+                  <span className="icon-box text-[color:var(--platinum)]/70">
+                    <AnimatedIcon name="mail" size={20} />
+                  </span>
                   <span className="truncate">hello@shayxo.dev</span>
                 </a>
               </div>
               <div>
                 <span className="eyebrow">Elsewhere</span>
                 <div className="mt-3 flex flex-col gap-3">
-                  <a href="https://github.com/shayann07" target="_blank" rel="noreferrer noopener" className="flex min-w-0 items-center gap-3 body-md hover:text-[color:var(--platinum)] transition-colors">
-                    <span className="shrink-0"><AnimatedIcon name="github" size={18} /></span>
+                  <a
+                    href="https://github.com/shayann07"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="flex min-w-0 items-center gap-3 py-1.5 body-md hover:text-[color:var(--platinum)] transition-colors"
+                  >
+                    <span className="shrink-0">
+                      <AnimatedIcon name="github" size={18} />
+                    </span>
                     <span className="truncate">github.com/shayann07</span>
                     <span className="sr-only">(opens in a new tab)</span>
                   </a>
-                  <a href="https://www.linkedin.com/in/shayann07" target="_blank" rel="noreferrer noopener" className="flex min-w-0 items-center gap-3 body-md hover:text-[color:var(--platinum)] transition-colors">
-                    <span className="shrink-0"><AnimatedIcon name="linkedin" size={18} /></span>
+                  <a
+                    href="https://www.linkedin.com/in/shayann07"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="flex min-w-0 items-center gap-3 py-1.5 body-md hover:text-[color:var(--platinum)] transition-colors"
+                  >
+                    <span className="shrink-0">
+                      <AnimatedIcon name="linkedin" size={18} />
+                    </span>
                     <span className="truncate">linkedin.com/in/shayann07</span>
                     <span className="sr-only">(opens in a new tab)</span>
                   </a>
@@ -360,36 +729,94 @@ function Contact() {
               </div>
             </div>
             <div className="pt-5 border-t border-white/10">
-              <div className="eyebrow flex items-center gap-2"><span className="live-dot" /> Currently available</div>
-              <div className="body-sm mt-2">Booking projects starting August 2026.</div>
+              <div className="eyebrow flex items-center gap-2">
+                <span className="live-dot" /> Currently available
+              </div>
+              <div className="body-sm mt-2">
+                Open to freelance work, collaborations, and ambitious app ideas.
+              </div>
             </div>
           </aside>
         </Reveal>
 
         <Reveal delay={0.1} className="lg:col-span-8">
-          <form onSubmit={submit} aria-labelledby="contact-title" className="glass rounded-[var(--radius-lg)] md:rounded-[var(--radius-xl)] p-5 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+          <form
+            onSubmit={submit}
+            aria-labelledby="contact-title"
+            className="glass rounded-[var(--radius-lg)] md:rounded-[var(--radius-xl)] p-5 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5"
+          >
             <div className="field md:col-span-1">
               <label htmlFor="name">Name</label>
-              <input id="name" name="name" autoComplete="name" required maxLength={80} className="input" placeholder="Ada Lovelace" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              <input
+                id="name"
+                name="name"
+                autoComplete="name"
+                required
+                maxLength={80}
+                className="input"
+                placeholder="Ada Lovelace"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
             </div>
             <div className="field md:col-span-1">
               <label htmlFor="email">Email</label>
-              <input id="email" name="email" autoComplete="email" inputMode="email" required type="email" maxLength={120} className="input" placeholder="you@company.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+              <input
+                id="email"
+                name="email"
+                autoComplete="email"
+                inputMode="email"
+                required
+                type="email"
+                maxLength={120}
+                className="input"
+                placeholder="you@company.com"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+              />
             </div>
             <div className="field md:col-span-2">
               <label htmlFor="subject">Subject</label>
-              <input id="subject" name="subject" maxLength={140} className="input" placeholder="What are we building?" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} />
+              <input
+                id="subject"
+                name="subject"
+                maxLength={140}
+                className="input"
+                placeholder="What are we building?"
+                value={form.subject}
+                onChange={(e) => setForm({ ...form, subject: e.target.value })}
+              />
             </div>
             <div className="field md:col-span-2">
               <label htmlFor="message">Message</label>
-              <textarea id="message" name="message" required maxLength={2000} aria-describedby="message-hint" className="textarea" placeholder="Tell me about the product, timeline, and stack…" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
-              <span id="message-hint" className="body-sm opacity-60">Max 2000 characters.</span>
+              <textarea
+                id="message"
+                name="message"
+                required
+                maxLength={2000}
+                aria-describedby="message-hint"
+                className="textarea"
+                placeholder="Tell me about the product, timeline, and stack…"
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
+              />
+              <span id="message-hint" className="body-sm opacity-60">
+                Max 2000 characters.
+              </span>
             </div>
             <div className="md:col-span-2 flex flex-wrap items-center justify-between gap-4 pt-2">
               <p role="status" aria-live="polite" className="eyebrow opacity-60">
-                {state === "sent" ? "Message handed off to your mail app." : state === "sending" ? "Opening your mail app…" : "Sends via your mail app — no data stored."}
+                {state === "sent"
+                  ? "Message handed off to your mail app."
+                  : state === "sending"
+                    ? "Opening your mail app…"
+                    : "Sends via your mail app — no data stored."}
               </p>
-              <button type="submit" disabled={disabled} className="btn btn-primary disabled:opacity-40 disabled:cursor-not-allowed">
+              <button
+                type="submit"
+                disabled={disabled}
+                className="btn btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
+              >
                 {state === "sent" ? "Sent ✓" : state === "sending" ? "Sending…" : "Send Message"}
                 {state === "idle" && <AnimatedIcon name="arrow" size={14} />}
               </button>
@@ -407,10 +834,12 @@ function Footer() {
     <footer className="section pt-0">
       <div className="container-x">
         <Reveal>
-          <div className="wordmark-bg leading-none" aria-hidden>SHAYAN</div>
+          <div className="wordmark-bg leading-none" aria-hidden>
+            SHAYAN
+          </div>
         </Reveal>
         <div className="mt-8 md:mt-10 flex flex-col md:flex-row items-center justify-between gap-3 border-t border-white/10 pt-6 text-center md:text-left">
-          <div className="eyebrow">© 2026 Muhammad Shayan · Karachi</div>
+          <div className="eyebrow">© 2026 Muhammad Shayan · Islamabad · shayxo.dev</div>
           <div className="eyebrow opacity-60">Built with TanStack Start · Motion · Tailwind v4</div>
         </div>
       </div>
@@ -422,6 +851,7 @@ function Footer() {
 function Page() {
   const { scrollY } = useScroll();
   const { active } = useSectionNav();
+  useIdleScenes();
 
   const handleAnchorClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const anchor = (e.target as HTMLElement).closest?.("a[href^='#']") as HTMLAnchorElement | null;
@@ -434,7 +864,9 @@ function Page() {
   return (
     <div className="grain relative isolate min-h-dvh overflow-x-clip" onClick={handleAnchorClick}>
       <ShaderBackground />
-      <a href="#main" className="skip-link">Skip to content</a>
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
       <Cursor />
       <Header active={active} />
       <SpatialNav active={active} />
@@ -442,6 +874,7 @@ function Page() {
       <main id="main" tabIndex={-1} className="relative z-10 pb-28 md:pb-20">
         <Hero scrollY={scrollY} />
         <About />
+        <Story />
         <Work />
         <Ribbon />
         <Lab />

@@ -10,7 +10,11 @@ export function ShaderBackground() {
   useEffect(() => {
     const canvas = ref.current;
     if (!canvas) return;
-    const gl = canvas.getContext("webgl", { premultipliedAlpha: true, antialias: false, powerPreference: "high-performance" });
+    const gl = canvas.getContext("webgl", {
+      premultipliedAlpha: true,
+      antialias: false,
+      powerPreference: "high-performance",
+    });
     if (!gl) return;
 
     const vert = `attribute vec2 p; void main(){ gl_Position = vec4(p,0.,1.); }`;
@@ -74,17 +78,23 @@ export function ShaderBackground() {
 
     const compile = (type: number, src: string) => {
       const s = gl.createShader(type)!;
-      gl.shaderSource(s, src); gl.compileShader(s);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
       return s;
     };
     const prog = gl.createProgram()!;
     gl.attachShader(prog, compile(gl.VERTEX_SHADER, vert));
     gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, frag));
-    gl.linkProgram(prog); gl.useProgram(prog);
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
 
     const buf = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+      gl.STATIC_DRAW,
+    );
     const loc = gl.getAttribLocation(prog, "p");
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
@@ -93,9 +103,11 @@ export function ShaderBackground() {
     const uT = gl.getUniformLocation(prog, "u_t");
     const uM = gl.getUniformLocation(prog, "u_mouse");
 
-    let mouse = [window.innerWidth * 0.5, window.innerHeight * 0.5];
+    const mouse = [window.innerWidth * 0.5, window.innerHeight * 0.5];
     let target = [...mouse];
-    const onMove = (e: PointerEvent) => { target = [e.clientX, window.innerHeight - e.clientY]; };
+    const onMove = (e: PointerEvent) => {
+      target = [e.clientX, window.innerHeight - e.clientY];
+    };
     window.addEventListener("pointermove", onMove);
 
     const resize = () => {
@@ -119,7 +131,11 @@ export function ShaderBackground() {
       const t = reduced ? 0 : (performance.now() - start) / 1000;
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.uniform1f(uT, t);
-      gl.uniform2f(uM, mouse[0] * (canvas.width / window.innerWidth), mouse[1] * (canvas.height / window.innerHeight));
+      gl.uniform2f(
+        uM,
+        mouse[0] * (canvas.width / window.innerWidth),
+        mouse[1] * (canvas.height / window.innerHeight),
+      );
       gl.drawArrays(gl.TRIANGLES, 0, 6);
       raf = requestAnimationFrame(tick);
     };

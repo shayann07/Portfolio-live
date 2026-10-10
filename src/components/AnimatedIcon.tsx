@@ -58,7 +58,11 @@ export const AnimatedIcon = memo(function AnimatedIcon({
       );
     case "gear":
       return (
-        <motion.svg {...common} style={{ ...common.style, transformOrigin: "50% 50%" }} {...m("body")}>
+        <motion.svg
+          {...common}
+          style={{ ...common.style, transformOrigin: "50% 50%" }}
+          {...m("body")}
+        >
           <circle cx="12" cy="12" r="3" />
           <path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.2 5.2l2.1 2.1M16.7 16.7l2.1 2.1M5.2 18.8L7.3 16.7M16.7 7.3l2.1-2.1" />
         </motion.svg>
@@ -110,7 +114,11 @@ export const AnimatedIcon = memo(function AnimatedIcon({
     case "map":
       return (
         <svg {...common}>
-          <path d="M9 4.5L3.5 6.8v12.7L9 17.2l6 2.3 5.5-2.3V4.5L15 6.8 9 4.5z" fill="currentColor" fillOpacity="0.12" />
+          <path
+            d="M9 4.5L3.5 6.8v12.7L9 17.2l6 2.3 5.5-2.3V4.5L15 6.8 9 4.5z"
+            fill="currentColor"
+            fillOpacity="0.12"
+          />
           <path d="M9 4.5v12.7M15 6.8v12.7" opacity="0.55" />
           <motion.circle
             cx="12"
@@ -126,7 +134,12 @@ export const AnimatedIcon = memo(function AnimatedIcon({
     case "layers":
       return (
         <svg {...common}>
-          <motion.path d="M12 3l8 4.5-8 4.5-8-4.5L12 3z" fill="currentColor" fillOpacity="0.16" {...m("top")} />
+          <motion.path
+            d="M12 3l8 4.5-8 4.5-8-4.5L12 3z"
+            fill="currentColor"
+            fillOpacity="0.16"
+            {...m("top")}
+          />
           <motion.path d="M4 12l8 4.5 8-4.5" opacity="0.75" {...m("mid")} />
           <motion.path d="M4 16.5L12 21l8-4.5" opacity="0.45" {...m("bottom")} />
         </svg>
@@ -135,13 +148,25 @@ export const AnimatedIcon = memo(function AnimatedIcon({
       return (
         <svg {...common}>
           <motion.path d="M2 11.5c2.5-5 5-5 7.5 0s5 5 7.5 0 5-5 5 0" {...m("front")} />
-          <motion.path d="M2 16.5c2.5-4 5-4 7.5 0s5 4 7.5 0 5-4 5 0" opacity="0.45" {...m("back")} />
+          <motion.path
+            d="M2 16.5c2.5-4 5-4 7.5 0s5 4 7.5 0 5-4 5 0"
+            opacity="0.45"
+            {...m("back")}
+          />
         </svg>
       );
     case "chip":
       return (
         <svg {...common}>
-          <rect x="7" y="7" width="10" height="10" rx="2.5" fill="currentColor" fillOpacity="0.14" />
+          <rect
+            x="7"
+            y="7"
+            width="10"
+            height="10"
+            rx="2.5"
+            fill="currentColor"
+            fillOpacity="0.14"
+          />
           <motion.rect
             x="10.25"
             y="10.25"
@@ -152,7 +177,10 @@ export const AnimatedIcon = memo(function AnimatedIcon({
             stroke="none"
             {...m("core")}
           />
-          <path d="M10 3.5v3.5M14 3.5v3.5M10 17v3.5M14 17v3.5M3.5 10H7M3.5 14H7M17 10h3.5M17 14h3.5" opacity="0.65" />
+          <path
+            d="M10 3.5v3.5M14 3.5v3.5M10 17v3.5M14 17v3.5M3.5 10H7M3.5 14H7M17 10h3.5M17 14h3.5"
+            opacity="0.65"
+          />
         </svg>
       );
     case "mail":
@@ -178,7 +206,11 @@ export const AnimatedIcon = memo(function AnimatedIcon({
       );
     case "plus":
       return (
-        <motion.svg {...common} whileHover={reduce ? undefined : { rotate: 90 }} transition={{ duration: 0.35 }}>
+        <motion.svg
+          {...common}
+          whileHover={reduce ? undefined : { rotate: 90 }}
+          transition={{ duration: 0.35 }}
+        >
           <path d="M12 5v14M5 12h14" />
         </motion.svg>
       );

@@ -3,6 +3,7 @@ import { scrollToHash } from "@/hooks/useSectionNav";
 const ITEMS = [
   { id: "top", label: "Intro" },
   { id: "about", label: "About" },
+  { id: "story", label: "Path" },
   { id: "work", label: "Work" },
   { id: "lab", label: "Lab" },
   { id: "contact", label: "Contact" },

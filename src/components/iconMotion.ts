@@ -44,19 +44,43 @@ export const ICON_MOTION: Record<string, Record<string, IconMotionPart>> = {
     diagonals: beat({ opacity: 0.55 }, { opacity: [0.25, 0.7, 0.25] }, BEAT / 2),
   },
   gear: {
-    body: { duration: 18, ease: "linear", direction: "cw", rest: { rotate: 0 }, active: { rotate: 360 } },
+    body: {
+      duration: 18,
+      ease: "linear",
+      direction: "cw",
+      rest: { rotate: 0 },
+      active: { rotate: 360 },
+    },
   },
   bolt: { body: beat({ scale: 1 }, { scale: [0.96, 1.04, 0.96] }) },
   orbit: {
-    outer: { duration: 9, ease: "linear", direction: "cw", rest: { rotate: 0 }, active: { rotate: 360 } },
-    inner: { duration: 14, ease: "linear", direction: "ccw", rest: { rotate: 60 }, active: { rotate: [60, -300] } },
+    outer: {
+      duration: 9,
+      ease: "linear",
+      direction: "cw",
+      rest: { rotate: 0 },
+      active: { rotate: 360 },
+    },
+    inner: {
+      duration: 14,
+      ease: "linear",
+      direction: "ccw",
+      rest: { rotate: 60 },
+      active: { rotate: [60, -300] },
+    },
   },
   download: { arrowhead: beat({ y: 0 }, { y: [0, 2, 0] }) },
   map: { pin: beat({ scale: 1, opacity: 1 }, { scale: [0.8, 1.15, 0.8], opacity: [0.6, 1, 0.6] }) },
   layers: {
     top: { duration: 3, ease: "easeInOut", rest: { y: 0 }, active: { y: [0, -1.2, 0] } },
     mid: { duration: 3, ease: "easeInOut", rest: { y: 0 }, active: { y: [0, 1, 0] }, delay: 0.15 },
-    bottom: { duration: 3, ease: "easeInOut", rest: { y: 0 }, active: { y: [0, 1.6, 0] }, delay: 0.3 },
+    bottom: {
+      duration: 3,
+      ease: "easeInOut",
+      rest: { y: 0 },
+      active: { y: [0, 1.6, 0] },
+      delay: 0.3,
+    },
   },
   wave: {
     front: { duration: 3.2, ease: "easeInOut", rest: { x: 0 }, active: { x: [0, -5, 0] } },

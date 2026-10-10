@@ -7,12 +7,21 @@ export const Route = createFileRoute("/icons")({
   head: () => ({
     meta: [
       { title: "Icon Gallery — Muhammad Shayan" },
-      { name: "description", content: "Preview of every AnimatedIcon glyph with sizes, motion specs, and a reduced-motion toggle." },
+      {
+        name: "description",
+        content:
+          "Preview of every AnimatedIcon glyph with sizes, motion specs, and a reduced-motion toggle.",
+      },
       { property: "og:title", content: "Icon Gallery — Muhammad Shayan" },
-      { property: "og:description", content: "Every AnimatedIcon variant, previewed at multiple sizes with a reduced-motion toggle." },
+      {
+        property: "og:description",
+        content:
+          "Every AnimatedIcon variant, previewed at multiple sizes with a reduced-motion toggle.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "robots", content: "noindex" },
+      // Internal design-system gallery, not portfolio content.
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: IconGallery,
@@ -31,7 +40,8 @@ function IconGallery() {
             <p className="body-sm opacity-60">Internal / QA</p>
             <h1 className="hd-2">Icon gallery</h1>
             <p className="body-sm opacity-70">
-              {ICON_NAMES.length} glyphs · toggle reduced motion to verify every icon settles into a static rest state.
+              {ICON_NAMES.length} glyphs · toggle reduced motion to verify every icon settles into a
+              static rest state.
             </p>
           </div>
           <button
@@ -52,7 +62,11 @@ function IconGallery() {
               <li key={name} className="glass rounded-2xl p-4" data-icon-cell={name}>
                 <div className="flex items-end gap-4">
                   {SIZES.map((size) => (
-                    <span key={size} className="icon-box" style={{ inlineSize: size + 8, blockSize: size + 8 }}>
+                    <span
+                      key={size}
+                      className="icon-box"
+                      style={{ inlineSize: size + 8, blockSize: size + 8 }}
+                    >
                       <AnimatedIcon name={name} size={size} forceReducedMotion={reduced} />
                     </span>
                   ))}
@@ -61,7 +75,10 @@ function IconGallery() {
                 <p className="body-sm text-xs opacity-55">
                   {parts
                     ? Object.entries(parts)
-                        .map(([part, spec]) => `${part} ${spec.duration}s${spec.direction ? ` ${spec.direction}` : ""}`)
+                        .map(
+                          ([part, spec]) =>
+                            `${part} ${spec.duration}s${spec.direction ? ` ${spec.direction}` : ""}`,
+                        )
                         .join(" · ")
                     : "static"}
                 </p>

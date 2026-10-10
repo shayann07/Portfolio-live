@@ -64,7 +64,9 @@ export function SpatialStack() {
             <strong>18.4</strong>
             <span className="spatial__label spatial__label--unit">ms / frame</span>
           </div>
-          <div className="spatial__meter"><i /></div>
+          <div className="spatial__meter">
+            <i />
+          </div>
         </div>
 
         {/* floating satellite chip */}
@@ -105,7 +107,7 @@ export function SpatialCluster() {
             ))}
           </div>
           <ul className="spatial-slab__rows">
-            {["Kotlin & Compose", "Flutter & Dart", "TensorFlow Lite"].map((t, i) => (
+            {["Kotlin Multiplatform", "Node & Firebase", "On-device ML"].map((t, i) => (
               <li key={t} style={{ animationDelay: `${i * 0.9}s` }}>
                 <i />
                 <span className="spatial__label">{t}</span>
@@ -127,7 +129,7 @@ export function SpatialCluster() {
 
         <div className="spatial-tag">
           <span className="spatial__dot" />
-          <span className="spatial__label">Karachi, PKT</span>
+          <span className="spatial__label">Islamabad, PKT</span>
         </div>
 
         <div className="spatial-chipfloat">

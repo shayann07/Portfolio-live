@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-export const SECTION_IDS = ["top", "about", "work", "lab", "contact"] as const;
+export const SECTION_IDS = ["top", "about", "story", "work", "lab", "contact"] as const;
 export type SectionId = (typeof SECTION_IDS)[number];
 
 function headerOffset() {
@@ -9,7 +9,9 @@ function headerOffset() {
 }
 
 function prefersReduced() {
-  return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  return (
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 }
 
 /** Scrolls a hash target into place accounting for the fixed glass header. */
@@ -35,7 +37,9 @@ export function useSectionNav() {
   const [active, setActive] = useState<string>("top");
 
   useEffect(() => {
-    const els = SECTION_IDS.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const els = SECTION_IDS.map((id) => document.getElementById(id)).filter(
+      Boolean,
+    ) as HTMLElement[];
     if (!els.length) return;
 
     let raf = 0;
