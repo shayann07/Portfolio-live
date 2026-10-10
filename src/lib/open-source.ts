@@ -166,11 +166,14 @@ export async function getOpenSourceData(customFetch = fetch): Promise<OpenSource
     return memoryCache.data;
   }
 
+  const forceFallback =
+    typeof process !== "undefined" && process.env?.OSS_FORCE_FALLBACK?.trim() === "true";
+
   const token =
     (typeof process !== "undefined" && process.env?.GITHUB_TOKEN) ||
     ((globalThis as unknown as { env?: { GITHUB_TOKEN?: string } }).env?.GITHUB_TOKEN ?? "");
 
-  if (!token) {
+  if (!token || forceFallback) {
     const fallback = memoryCache?.data ?? getSnapshotData();
     return fallback;
   }
@@ -202,7 +205,7 @@ export async function getOpenSourceData(customFetch = fetch): Promise<OpenSource
           }
         }
       }
-      inReview: search(type: ISSUE, query: $openQuery) {
+      inReview: search(type: ISSUE, first: 1, query: $openQuery) {
         issueCount
       }
     }

@@ -207,6 +207,7 @@ const LAB = [
     note: "One AGSL/SkSL shader doing refraction, dispersion and rim lighting, fitted to measurements from real captures rather than tuned by eye, with a graceful fallback below Android 13.",
     status: "Maven Central",
     icon: "spark",
+    href: "https://shayann07.github.io/liquidglass/",
   },
 ];
 
@@ -255,6 +256,7 @@ function SplitReveal({
   delay?: number;
   className?: string;
 }) {
+  const shouldReduceMotion = useReducedMotion();
   return (
     <span className={className}>
       {/* No sr-only twin: it duplicated the name in the h1's text content
@@ -265,13 +267,17 @@ function SplitReveal({
             {Array.from(word).map((ch, ci) => (
               <span key={`${ch}-${ci}`} className="char-mask">
                 <motion.span
-                  initial={{ y: "110%" }}
+                  initial={shouldReduceMotion ? { y: "0%" } : { y: "110%" }}
                   animate={{ y: "0%" }}
-                  transition={{
-                    duration: 0.9,
-                    ease: [0.7, 0, 0.2, 1],
-                    delay: delay + wi * 0.04 + ci * 0.015,
-                  }}
+                  transition={
+                    shouldReduceMotion
+                      ? { duration: 0 }
+                      : {
+                          duration: 0.9,
+                          ease: [0.7, 0, 0.2, 1],
+                          delay: delay + wi * 0.04 + ci * 0.015,
+                        }
+                  }
                 >
                   {ch}
                 </motion.span>
@@ -572,12 +578,14 @@ function Work() {
 /** One Lab card. Owns a pointer hook so its diorama parallaxes like the work panes. */
 function LabCard({ item }: { item: (typeof LAB)[number] }) {
   const { ref, onPointerMove, onPointerLeave } = useSpatialPointer<HTMLAnchorElement>(7);
+  const isExternal = Boolean("href" in item && item.href && item.href.startsWith("http"));
   return (
     <a
       ref={ref}
-      href="#contact"
-      data-cursor="View"
-      aria-label={`${item.title} — ${item.note} (${item.status})`}
+      href={("href" in item && item.href) || "#contact"}
+      {...(isExternal ? { target: "_blank", rel: "noreferrer noopener" } : {})}
+      data-cursor={isExternal ? "Docs" : "View"}
+      aria-label={`${item.title} — ${item.note} (${item.status})${isExternal ? ". View documentation (opens in a new tab)." : ""}`}
       className="lab-card glass-soft h-full rounded-[var(--radius-lg)] md:rounded-[var(--radius-xl)] p-5 md:p-7 flex flex-col justify-between min-h-[168px] md:min-h-[220px] group"
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
@@ -598,7 +606,7 @@ function LabCard({ item }: { item: (typeof LAB)[number] }) {
         <h3 className="hd-3 block">{item.title}</h3>
         <span className="body-sm mt-2 block">{item.note}</span>
         <span className="mt-3 flex items-center gap-2 eyebrow text-[color:var(--platinum)] opacity-60 md:opacity-0 md:group-hover:opacity-100 md:group-focus-visible:opacity-100 transition-opacity">
-          Explore <AnimatedIcon name="arrow" size={14} />
+          {isExternal ? "Documentation" : "Explore"} <AnimatedIcon name="arrow" size={14} />
         </span>
       </span>
     </a>

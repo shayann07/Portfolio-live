@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { AnimatedIcon } from "./AnimatedIcon";
 import { Reveal } from "./Reveal";
 import {
@@ -13,11 +13,26 @@ type Props = {
 };
 
 export const OpenSource = memo(function OpenSource({ data }: Props) {
+  const fetchedAt = data?.fetchedAt ?? null;
+  const isLive = data?.isLive ?? false;
+  const [updatedAgo, setUpdatedAgo] = useState(() =>
+    fetchedAt ? formatUpdatedAgo(fetchedAt) : "",
+  );
+
+  useEffect(() => {
+    if (!fetchedAt || !isLive) return;
+    setUpdatedAgo(formatUpdatedAgo(fetchedAt));
+    const id = window.setInterval(() => {
+      setUpdatedAgo(formatUpdatedAgo(fetchedAt));
+    }, 30_000);
+    return () => window.clearInterval(id);
+  }, [fetchedAt, isLive]);
+
   if (!data || !data.cards || data.cards.length === 0) {
     return null;
   }
 
-  const { cards, mergedCount, inReviewCount, fetchedAt, isLive } = data;
+  const { cards, mergedCount, inReviewCount } = data;
 
   return (
     <section id="open-source" aria-labelledby="open-source-title" className="section">
@@ -50,9 +65,7 @@ export const OpenSource = memo(function OpenSource({ data }: Props) {
               )}
             </div>
 
-            {isLive && fetchedAt && (
-              <div className="eyebrow opacity-60">{formatUpdatedAgo(fetchedAt)}</div>
-            )}
+            {isLive && fetchedAt && <div className="eyebrow opacity-60">{updatedAgo}</div>}
           </div>
         </Reveal>
 

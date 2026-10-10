@@ -87,6 +87,7 @@ const PROJECT_SCHEMA = [
     languages: ["Kotlin"],
     keywords: ["Kotlin Multiplatform", "Canvas", "Android", "Design"],
     url: "https://play.google.com/store/apps/details?id=com.webscare.urducanvas&hl=en-US",
+    isRepo: false,
   },
   {
     name: "InvoiceOne",
@@ -95,6 +96,7 @@ const PROJECT_SCHEMA = [
     languages: ["Kotlin"],
     keywords: ["Kotlin Multiplatform", "Compose Multiplatform", "MVI", "Clean Architecture"],
     url: undefined,
+    isRepo: false,
   },
   {
     name: "liquidglass",
@@ -103,6 +105,7 @@ const PROJECT_SCHEMA = [
     languages: ["Kotlin"],
     keywords: ["Compose Multiplatform", "AGSL", "Skia", "Shaders", "Open source"],
     url: "https://github.com/shayann07/liquidglass",
+    isRepo: true,
   },
   {
     name: "Upscaly",
@@ -111,6 +114,7 @@ const PROJECT_SCHEMA = [
     languages: ["Kotlin", "Rust", "C++"],
     keywords: ["Real-ESRGAN", "Vulkan", "ncnn", "Desktop", "Android"],
     url: "https://github.com/shayann07/Upscaly",
+    isRepo: true,
   },
   {
     name: "Urdu Speech to Text",
@@ -118,6 +122,7 @@ const PROJECT_SCHEMA = [
     languages: ["Kotlin"],
     keywords: ["Android", "Speech Recognition", "Voice", "Google Play"],
     url: "https://play.google.com/store/apps/details?id=com.webscare.urduspeechtotext&hl=en-US",
+    isRepo: false,
   },
   {
     name: "Medly",
@@ -126,6 +131,7 @@ const PROJECT_SCHEMA = [
     languages: ["Kotlin"],
     keywords: ["Android", "Gemini", "Room", "AlarmManager"],
     url: "https://play.google.com/store/apps/details?id=com.medly.reminder&hl=en-US",
+    isRepo: false,
   },
 ].map((p, i) => ({
   "@type": "SoftwareSourceCode",
@@ -135,7 +141,7 @@ const PROJECT_SCHEMA = [
   programmingLanguage: p.languages,
   keywords: p.keywords,
   author: { "@id": `${SITE_URL}/#person` },
-  ...(p.url ? { codeRepository: p.url } : {}),
+  ...(p.url ? (p.isRepo ? { codeRepository: p.url, url: p.url } : { url: p.url }) : {}),
 }));
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
