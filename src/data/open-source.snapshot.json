@@ -1,0 +1,43 @@
+{
+  "mergedCount": 4,
+  "inReviewCount": null,
+  "fetchedAt": null,
+  "cards": [
+    {
+      "repo": "lysine-dev/okhttp",
+      "repoUrl": "https://github.com/lysine-dev/okhttp",
+      "stars": 47000,
+      "number": 9776,
+      "title": "Wrap HTTP resolution errors in UnknownHostException in DnsOverHttps",
+      "url": "https://github.com/lysine-dev/okhttp/pull/9776",
+      "mergedAt": "2026-10-02T12:00:00Z"
+    },
+    {
+      "repo": "arrow-kt/arrow",
+      "repoUrl": "https://github.com/arrow-kt/arrow",
+      "stars": 6500,
+      "number": 3977,
+      "title": "Pass optional accumulated value to recovery handler in Ior",
+      "url": "https://github.com/arrow-kt/arrow/pull/3977",
+      "mergedAt": "2026-10-03T12:00:00Z"
+    },
+    {
+      "repo": "chrisbanes/haze",
+      "repoUrl": "https://github.com/chrisbanes/haze",
+      "stars": 2600,
+      "number": 1387,
+      "title": "Provide Desktop window identity via LocalAwtWindow",
+      "url": "https://github.com/chrisbanes/haze/pull/1387",
+      "mergedAt": "2026-10-02T12:00:00Z"
+    },
+    {
+      "repo": "cashapp/molecule",
+      "repoUrl": "https://github.com/cashapp/molecule",
+      "stars": 2200,
+      "number": 796,
+      "title": "Add NodeJsFrameClock for Kotlin/JS Node.js runtime",
+      "url": "https://github.com/cashapp/molecule/pull/796",
+      "mergedAt": "2026-10-02T12:00:00Z"
+    }
+  ]
+}
