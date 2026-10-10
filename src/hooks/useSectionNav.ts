@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 
-export const SECTION_IDS = ["top", "about", "story", "work", "lab", "contact"] as const;
+export const SECTION_IDS = [
+  "top",
+  "about",
+  "story",
+  "work",
+  "open-source",
+  "lab",
+  "contact",
+] as const;
 export type SectionId = (typeof SECTION_IDS)[number];
 
 function headerOffset() {

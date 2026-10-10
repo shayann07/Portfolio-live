@@ -32,9 +32,8 @@ dist-ssr
 *.sw?
 
 # Env files
-.env
-.env.local
-.env.*.local
+.env*
+!.env.example
 
 # Windows
 Thumbs.db

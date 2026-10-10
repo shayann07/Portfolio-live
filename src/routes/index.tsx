@@ -13,14 +13,20 @@ import { ShaderBackground } from "@/components/ShaderBackground";
 import { AnimatedIcon } from "@/components/AnimatedIcon";
 import { SpatialStack, SpatialCluster } from "@/components/SpatialStack";
 import { SpatialWork } from "@/components/SpatialWork";
+import { OpenSource } from "@/components/OpenSource";
 import { LabScene } from "@/components/LabScene";
 import { useSpatialPointer } from "@/components/useSpatialPointer";
 import { SpatialNav } from "@/components/SpatialNav";
 import { useReveal } from "@/hooks/useReveal";
 import { useSectionNav, scrollToHash } from "@/hooks/useSectionNav";
 import { useIdleScenes } from "@/hooks/useIdleScenes";
+import { getOpenSourceContributions } from "@/server/open-source";
 
 export const Route = createFileRoute("/")({
+  loader: async () => {
+    const oss = await getOpenSourceContributions();
+    return { oss };
+  },
   head: () => ({
     meta: [
       { title: "Muhammad Shayan — Kotlin Multiplatform Developer" },
@@ -326,8 +332,16 @@ function SectionHead({
 }
 
 /* ---------- Header + Nav ---------- */
-function Header({ active }: { active: string }) {
+function Header({ active, hasOSS = true }: { active: string; hasOSS?: boolean }) {
   const time = useLocalTime();
+  const navItems = [
+    ["About", "#about"],
+    ["Path", "#story"],
+    ["Work", "#work"],
+    ...(hasOSS ? [["Open Source", "#open-source"]] : []),
+    ["Lab", "#lab"],
+    ["Contact", "#contact"],
+  ];
   return (
     <header className="fixed inset-x-0 top-0 z-40 px-[var(--space-gutter)] py-4">
       <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-3">
@@ -337,13 +351,7 @@ function Header({ active }: { active: string }) {
         </a>
         <div className="hidden md:block">
           <nav aria-label="Primary" className="pill">
-            {[
-              ["About", "#about"],
-              ["Path", "#story"],
-              ["Work", "#work"],
-              ["Lab", "#lab"],
-              ["Contact", "#contact"],
-            ].map(([label, href]) => (
+            {navItems.map(([label, href]) => (
               <a
                 key={label}
                 href={href}
@@ -603,7 +611,7 @@ function Lab() {
     <section id="lab" aria-labelledby="lab-title" className="section">
       <SectionHead
         id="lab-title"
-        eyebrow="04 / Lab"
+        eyebrow="05 / Lab"
         title="Under the hood."
         kicker="Infrastructure &amp; internals"
       />
@@ -662,7 +670,7 @@ function Contact() {
     <section id="contact" aria-labelledby="contact-title" className="section">
       <SectionHead
         id="contact-title"
-        eyebrow="05 / Contact"
+        eyebrow="06 / Contact"
         title="Let's build something calm and fast."
         kicker="Product work &amp; collaborations"
       />
@@ -836,9 +844,12 @@ function Footer() {
 
 /* ---------- Page ---------- */
 function Page() {
+  const { oss } = Route.useLoaderData();
   const { scrollY } = useScroll();
   const { active } = useSectionNav();
   useIdleScenes();
+
+  const hasOSS = Boolean(oss?.cards && oss.cards.length > 0);
 
   const handleAnchorClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const anchor = (e.target as HTMLElement).closest?.("a[href^='#']") as HTMLAnchorElement | null;
@@ -855,14 +866,15 @@ function Page() {
         Skip to content
       </a>
       <Cursor />
-      <Header active={active} />
-      <SpatialNav active={active} />
+      <Header active={active} hasOSS={hasOSS} />
+      <SpatialNav active={active} hasOSS={hasOSS} />
 
       <main id="main" tabIndex={-1} className="relative z-10 pb-28 md:pb-20">
         <Hero scrollY={scrollY} />
         <About />
         <Story />
         <Work />
+        {hasOSS && <OpenSource data={oss} />}
         <Ribbon />
         <Lab />
         <Contact />
