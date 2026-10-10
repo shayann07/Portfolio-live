@@ -11,13 +11,12 @@
  */
 
 export const PROJECT_MARKS = [
-  "medly",
+  "urducanvas",
   "invoiceone",
-  "leafbloom",
+  "liquidglass",
   "upscaly",
-  "streambox",
-  "medicare",
-  "gitpulse",
+  "urduspeech",
+  "medly",
 ] as const;
 
 export type ProjectMarkName = (typeof PROJECT_MARKS)[number];
@@ -35,11 +34,12 @@ const BODY = {
 const ACC = { ...BODY, stroke: ACCENT } as const;
 
 const SHAPES: Record<ProjectMarkName, React.ReactNode> = {
-  medly: (
-    <g transform="rotate(-40 12 12)">
-      <rect {...BODY} x="3.5" y="9" width="17" height="6" rx="3" />
-      <path {...ACC} d="M12 9v6" />
-    </g>
+  urducanvas: (
+    <>
+      <rect {...BODY} x="3.5" y="3.5" width="17" height="17" rx="2.5" />
+      <path {...BODY} d="M7 15.5h10" />
+      <path {...ACC} d="M7 11.5c3.5 0 4.5-4 10-4" />
+    </>
   ),
   invoiceone: (
     <>
@@ -49,11 +49,11 @@ const SHAPES: Record<ProjectMarkName, React.ReactNode> = {
       <path {...BODY} d="M7 15h6.5" />
     </>
   ),
-  leafbloom: (
+  liquidglass: (
     <>
-      <path {...BODY} d="M4.5 19.5C4.5 11.2 11.2 4.5 19.5 4.5c0 8.3-6.7 15-15 15z" />
-      <path {...BODY} d="M7 17 17 7" />
-      <path {...ACC} d="M5.5 13.5h9" />
+      <circle {...BODY} cx="12" cy="12" r="7.5" />
+      <path {...BODY} d="M7 15a5.5 5.5 0 0 0 5 2" />
+      <path {...ACC} d="M8 8a5.5 5.5 0 0 1 8 5" />
     </>
   ),
   upscaly: (
@@ -63,32 +63,18 @@ const SHAPES: Record<ProjectMarkName, React.ReactNode> = {
       <path {...ACC} d="m11 11 8.6 8.6" />
     </>
   ),
-  streambox: (
+  urduspeech: (
     <>
-      <rect {...BODY} x="3" y="3" width="8" height="8" rx="1.6" />
-      <rect {...BODY} x="13" y="3" width="8" height="8" rx="1.6" />
-      <rect {...BODY} x="3" y="13" width="8" height="8" rx="1.6" />
-      <rect {...ACC} x="13" y="13" width="8" height="8" rx="1.6" />
-      <path d="M15.8 15.4v5.2l4.2-2.6z" fill={ACCENT} />
+      <rect {...BODY} x="8" y="3.5" width="8" height="10" rx="4" />
+      <path {...BODY} d="M5.5 10.5a6.5 6.5 0 0 0 13 0M12 17v3" />
+      <path {...ACC} d="M4 20.5c2.5-1.5 5.5-1.5 8 0s5.5 1.5 8 0" />
     </>
   ),
-  medicare: (
-    <>
-      <path
-        {...BODY}
-        d="M12 20.5 4.9 13.4a4.6 4.6 0 1 1 6.4-6.5l.7.7.7-.7a4.6 4.6 0 1 1 6.4 6.5z"
-      />
-      <path {...ACC} d="M12 10v4.5M9.75 12.25h4.5" />
-    </>
-  ),
-  gitpulse: (
-    <>
-      <path {...BODY} d="M3 12h3.6" />
-      <path {...ACC} d="m6.6 12 2.6-5.4 3.4 11 2.6-5.6" />
-      <path {...BODY} d="M15.2 12H21" />
-      <circle {...BODY} cx="3" cy="12" r="1.5" />
-      <circle {...BODY} cx="21" cy="12" r="1.5" />
-    </>
+  medly: (
+    <g transform="rotate(-40 12 12)">
+      <rect {...BODY} x="3.5" y="9" width="17" height="6" rx="3" />
+      <path {...ACC} d="M12 9v6" />
+    </g>
   ),
 };
 

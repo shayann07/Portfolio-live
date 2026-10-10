@@ -23,20 +23,20 @@ import { useIdleScenes } from "@/hooks/useIdleScenes";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Muhammad Shayan — Software Engineer" },
+      { title: "Muhammad Shayan — Kotlin Multiplatform Developer" },
       {
         name: "description",
         content:
-          "Software engineer building Kotlin Multiplatform apps, backend services and on-device ML. Android, desktop, web and iOS — shipped end to end from Islamabad.",
+          "Kotlin Multiplatform developer shipping apps that share one codebase across Android, iOS, desktop and web. 8 apps on Google Play with 70K+ installs.",
       },
-      { property: "og:title", content: "Muhammad Shayan — Software Engineer" },
+      { property: "og:title", content: "Muhammad Shayan — Kotlin Multiplatform Developer" },
       {
         property: "og:description",
         content:
-          "Kotlin Multiplatform, backend services, payment rails, and on-device ML — product systems built end to end by Muhammad Shayan.",
+          "Kotlin Multiplatform developer shipping apps that share one codebase across Android, iOS, desktop and web. 8 apps on Google Play with 70K+ installs, plus open-source work in the Kotlin ecosystem.",
       },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Page,
@@ -54,120 +54,121 @@ const PROOF = [
     icon: "orbit",
   },
   {
-    claim: "Front to back",
-    evidence: "Client, API, admin panel",
-    href: "#w-streambox",
+    claim: "Shipped apps",
+    evidence: "8 on Google Play · 70K+ installs",
+    href: "#w-urducanvas",
     icon: "layers",
   },
-  { claim: "On-device ML", evidence: "PyTorch Mobile · <50ms", href: "#w-leafbloom", icon: "chip" },
   {
-    claim: "Payments & billing",
-    evidence: "Stripe · CoinPayments",
-    href: "#w-medicare",
+    claim: "Open source",
+    evidence: "Merged in OkHttp, Arrow, Molecule, Haze",
+    href: "#open-source",
+    icon: "chip",
+  },
+  {
+    claim: "Graphics",
+    evidence: "Shader-based Compose UI",
+    href: "#w-liquidglass",
     icon: "wave",
   },
 ];
 
 const WORK = [
   {
-    id: "w-medly",
-    mark: "medly" as const,
-    title: "Medly",
-    desc: "Point the camera at a paper prescription — Gemini extracts the medication list, drug names are verified against RxNorm, and two-stage alarms fire a full-screen reminder at dose time. Adherence history stays local in Room.",
-    tag: "HealthTech · Kotlin",
-    year: "2026",
-    badge: "RxNorm",
-    href: "https://play.google.com/store/apps/details?id=com.medly.reminder&hl=en-US",
+    id: "w-urducanvas",
+    mark: "urducanvas" as const,
+    title: "UrduCanvas",
+    desc: "Urdu text-on-photo design editor drawn entirely on Canvas. Right-to-left typing with Kasheeda, layers, gradients and brushes, a template library, and one-tap background removal.",
+    tag: "Design editor · Kotlin Multiplatform",
+    year: "2025",
+    badge: "10K+ installs",
+    href: "https://play.google.com/store/apps/details?id=com.webscare.urducanvas&hl=en-US",
     link: "store" as const,
   },
   {
     id: "w-invoiceone",
     mark: "invoiceone" as const,
     title: "InvoiceOne",
-    desc: "Local-first invoicing on a Kotlin Multiplatform base — 34 Gradle modules, Android alongside desktop, web, and iOS targets, every feature split api/impl behind an MVI shell.",
+    desc: "Local-first invoicing on a Kotlin Multiplatform base: one codebase across Android, iOS, desktop and web, 50+ Gradle modules, every feature split api/impl behind an MVI shell.",
     tag: "Multiplatform · Kotlin",
     year: "2026",
-    badge: "34 modules",
-    href: "#contact",
-    link: "contact" as const,
+    badge: "50+ modules",
+    href: "",
+    link: "soon" as const,
   },
   {
-    id: "w-leafbloom",
-    mark: "leafbloom" as const,
-    title: "LeafBloom",
-    desc: "Crop disease and pest diagnosis running entirely on the handset — PyTorch Mobile Lite under 50ms per frame over CameraX, with Gemini botanical consults and Open-Meteo microclimate context layered on top.",
-    tag: "Vision ML · Android",
+    id: "w-liquidglass",
+    mark: "liquidglass" as const,
+    title: "liquidglass",
+    desc: "Liquid Glass for Compose Multiplatform. Real refraction, dispersion and rim lighting in one shader, applied with a single modifier. Android (AGSL) and desktop (Skia), published on Maven Central with docs.",
+    tag: "Open source · Compose Multiplatform",
     year: "2026",
-    badge: "<50ms",
-    href: "https://github.com/shayann07/LeafBloom",
+    badge: "Maven Central",
+    href: "https://github.com/shayann07/liquidglass",
     link: "source" as const,
   },
   {
     id: "w-upscaly",
     mark: "upscaly" as const,
     title: "Upscaly",
-    desc: "Real-ESRGAN image and video upscaling on your own GPU — batch queues, a VRAM governor that keeps the machine alive, and an extensible model catalogue. Nothing uploaded, no account. An Android port runs the same models on ncnn + Vulkan.",
-    tag: "Desktop · Real-ESRGAN",
+    desc: "Free, offline AI image and video upscaling on your own GPU. Real-ESRGAN, batch queues and a VRAM governor that keeps the machine alive. Nothing is uploaded; an Android port runs the same models on ncnn and Vulkan.",
+    tag: "Desktop + Android · Real-ESRGAN",
     year: "2026",
     badge: "Local GPU",
-    href: "https://github.com/shayann07/Upscaly",
-    link: "source" as const,
+    href: "https://upscaly.shayxo.dev",
+    link: "site" as const,
   },
   {
-    id: "w-streambox",
-    mark: "streambox" as const,
-    title: "StreamBox",
-    desc: "IPTV and VOD across phone, tablet, Android TV and Fire TV on a Media3 pipeline — HLS/DASH/RTSP, multi-screen matrix playback, EPG grids and OpenVPN tunnelling, paired with a CodeIgniter 4 management panel.",
-    tag: "Streaming · Android + PHP",
+    id: "w-urduspeech",
+    mark: "urduspeech" as const,
+    title: "Urdu Speech to Text",
+    desc: "Voice transcription for Urdu, live on Google Play with 10K+ installs.",
+    tag: "Voice · Android",
+    year: "2025",
+    badge: "10K+ installs",
+    href: "https://play.google.com/store/apps/details?id=com.webscare.urduspeechtotext&hl=en-US",
+    link: "store" as const,
+  },
+  {
+    id: "w-medly",
+    mark: "medly" as const,
+    title: "Medly",
+    desc: "Point the camera at a paper prescription — Gemini extracts the medication list, drug names are verified against RxNorm, and two-stage alarms fire a full-screen reminder at dose time. Adherence history stays local in Room.",
+    tag: "HealthTech · Android",
     year: "2026",
-    badge: "Fire TV",
-    href: "https://github.com/shayann07/streambox",
-    link: "source" as const,
-  },
-  {
-    id: "w-medicare",
-    mark: "medicare" as const,
-    title: "Medicare",
-    desc: "Flutter telehealth on GetX — browse specialists, book against dynamic 20-minute slots, pay through the native Stripe sheet, and get disclaimer-governed triage from a GPT-4o-mini assistant.",
-    tag: "HealthTech · Flutter",
-    year: "2025",
-    badge: "Stripe",
-    href: "https://github.com/shayann07/medicare_app_flutter",
-    link: "source" as const,
-  },
-  {
-    id: "w-gitpulse",
-    mark: "gitpulse" as const,
-    title: "GitPulse",
-    desc: "Schedules GitHub commits from an Android handset. GitHub OAuth, the access token sealed in EncryptedSharedPreferences, and background workers that keep a contribution streak ticking over.",
-    tag: "Dev Tool · Kotlin",
-    year: "2025",
-    badge: "OAuth",
-    href: "#contact",
-    link: "contact" as const,
+    badge: "RxNorm",
+    href: "https://play.google.com/store/apps/details?id=com.medly.reminder&hl=en-US",
+    link: "store" as const,
   },
 ];
 
 const STORY = [
   {
     period: "May 2026 — Now",
-    role: "Software Engineer",
+    role: "Kotlin Multiplatform Developer",
     org: "Webscare · Sargodha",
-    note: "Feature work end to end — clean UI, stable flows, API integration, and release-ready updates.",
+    note: "Cross-platform apps with Compose Multiplatform and MVI across 50+ shared modules. Shipped 4 apps on Google Play, including Urdu Speech to Text and Speedometer GO, through CI/CD releases.",
     current: true,
   },
   {
+    period: "Sep 2025 — Mar 2026",
+    role: "Android Developer",
+    org: "TudoNum · Portugal",
+    note: "Built an on-demand services marketplace with 50+ screens: booking, provider bidding, in-app chat, payments. Integrated REST APIs with secure sign-in and offline caching.",
+    current: false,
+  },
+  {
     period: "Jun 2024 — Now",
-    role: "Freelance Software Engineer",
+    role: "Freelance Android Developer",
     org: "Self-employed",
-    note: "Three production apps with 10k+ combined installs. Offline-first sync over Room and Firebase, multi-module architecture, CI/CD.",
+    note: "Delivered 3 production apps with 10K+ installs using offline-first sync, Firebase, Room and stable release workflows. Built LUP Reader, a reading aid for low-vision users in Spain that reads text aloud in 6 languages.",
     current: true,
   },
   {
     period: "May — Aug 2025",
     role: "Android Developer Intern",
-    org: "Appverse Technologies",
-    note: "Built Android modules on MVVM, refactored for stability, and integrated REST and GraphQL APIs with caching.",
+    org: "Appverse Technologies · Lahore",
+    note: "Built Android modules on MVVM and improved stability through refactoring and unit testing.",
     current: false,
   },
   {
@@ -206,23 +207,18 @@ const LAB = [
 const STACK = [
   "Kotlin Multiplatform",
   "Kotlin",
+  "Compose Multiplatform",
   "Jetpack Compose",
-  "Flutter",
-  "TypeScript",
-  "Node.js",
-  "Express",
+  "Coroutines",
+  "Flow",
+  "Ktor",
+  "SQLDelight",
+  "Koin",
+  "Clean Architecture",
+  "MVI",
   "Firebase",
-  "Cloud Functions",
-  "PostgreSQL",
-  "REST",
-  "GraphQL",
-  "Stripe",
-  "PyTorch Mobile",
-  "TensorFlow Lite",
-  "MediaPipe",
-  "Room",
-  "Media3",
-  "Docker",
+  "Gradle",
+  "Git",
   "CI/CD",
 ];
 
@@ -402,13 +398,9 @@ function Hero({ scrollY }: { scrollY: MotionValue<number> }) {
             </h1>
             <Reveal delay={0.6}>
               <p className="body-md mt-6 md:mt-8 max-w-xl">
-                Software engineer who ships{" "}
-                <span className="text-[color:var(--platinum)]">
-                  whole systems, not just screens
-                </span>{" "}
-                — Kotlin Multiplatform clients across Android, desktop, web and iOS, the services
-                and payment rails behind them, and on-device ML where it earns its place. Based in
-                Islamabad, shipping worldwide.
+                Kotlin Multiplatform developer shipping apps that share one codebase across Android,
+                iOS, desktop and web. 8 apps on Google Play with 70K+ installs, plus open-source
+                work in the Kotlin ecosystem. Based in Islamabad, shipping worldwide.
               </p>
             </Reveal>
             <Reveal delay={0.75}>
@@ -491,21 +483,16 @@ function About() {
         <div className="md:col-span-7 grid gap-4 md:gap-5">
           <Reveal>
             <p className="body-md">
-              I started on Android and did not stop there. These days a project usually means the
-              whole thing: a Kotlin Multiplatform client, the Express and Firebase services
-              underneath it, the scheduled jobs that settle balances overnight, the payment rail,
-              and the admin panel someone actually runs the business from. Health, agriculture,
-              streaming, fintech, business tooling, desktop.
+              I started on Android and did not stop there. These days I build Kotlin Multiplatform
+              clients on Compose Multiplatform — local-first storage, modules that do not reach into
+              each other, and screens that are pure functions of state.
             </p>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="body-md">
-              I favour architectures that are boring where it counts — local-first storage, modules
-              that do not reach into each other, screens that are pure functions of their state —
-              and expressive where people actually touch them. Lately: a 34-module Kotlin
-              Multiplatform build, Real-ESRGAN on a phone GPU through Vulkan, sub-50ms vision
-              inference over a CameraX stream. Sharpened at Appverse Technologies, on top of a BS in
-              Software Engineering from the University of Sargodha.
+              Lately: a 50+ module build, shader work in liquidglass, and contributions to libraries
+              other people depend on. Sharpened at Appverse Technologies, on top of a BS in Software
+              Engineering from the University of Sargodha.
             </p>
           </Reveal>
           <Reveal delay={0.2}>

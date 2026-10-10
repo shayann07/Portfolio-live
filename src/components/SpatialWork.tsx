@@ -19,14 +19,14 @@ function WorkScene({ variant, badge }: { variant: SceneName; badge?: string }) {
       <span className="wscene__shadow" />
       <span className="wscene__glow" />
       <span className="wscene__stage">
-        {variant === "medly" && (
+        {variant === "urducanvas" && (
           <>
-            <span className="wplane wp--sheet">
-              <i className="wrow" />
+            <span className="wplane wp--canvas-back" />
+            <span className="wplane wp--canvas-front">
+              <span className="wstroke" />
               <i className="wrow" />
               <i className="wrow" />
             </span>
-            <span className="wcapsule" />
           </>
         )}
         {variant === "invoiceone" && (
@@ -41,11 +41,13 @@ function WorkScene({ variant, badge }: { variant: SceneName; badge?: string }) {
             </span>
           </>
         )}
-        {variant === "leafbloom" && (
-          <span className="wplane wp--cam">
-            <span className="wleaf" />
-            <span className="wscan" />
-          </span>
+        {variant === "liquidglass" && (
+          <>
+            <span className="wplane wp--lg-grad" />
+            <span className="wplane wp--lg-glass">
+              <span className="wrefract" />
+            </span>
+          </>
         )}
         {variant === "upscaly" && (
           <>
@@ -57,22 +59,26 @@ function WorkScene({ variant, badge }: { variant: SceneName; badge?: string }) {
             </span>
           </>
         )}
-        {variant === "streambox" && <span className="wmatrix">{cells(6, { 4: "is-live" })}</span>}
-        {variant === "medicare" && (
-          <span className="wplane wp--cal">
-            <span className="wslots">{cells(12, { 6: "is-booked" })}</span>
-          </span>
-        )}
-        {variant === "gitpulse" && (
-          <span className="wplane wp--grid">
-            <span className="wcontrib">
-              {cells(24, { 3: "is-warm", 6: "is-hot", 9: "is-warm", 14: "is-hot", 19: "is-warm" })}
+        {variant === "urduspeech" && (
+          <span className="wplane wp--wave">
+            <span className="wwaveform">
+              {cells(16, { 4: "is-peak", 5: "is-peak", 9: "is-peak", 10: "is-peak" })}
             </span>
           </span>
         )}
+        {variant === "medly" && (
+          <>
+            <span className="wplane wp--sheet">
+              <i className="wrow" />
+              <i className="wrow" />
+              <i className="wrow" />
+            </span>
+            <span className="wcapsule" />
+          </>
+        )}
         {badge && (
           <span
-            className={`wtag ${variant === "medicare" || variant === "gitpulse" ? "wtag--b" : "wtag--a"}`}
+            className={`wtag ${variant === "urduspeech" || variant === "medly" ? "wtag--b" : "wtag--a"}`}
           >
             {badge}
           </span>
@@ -93,17 +99,17 @@ export type WorkItem = {
   mark: ProjectMarkName;
   /** A verifiable fact from the repo, shown on the diorama. */
   badge?: string;
-  href: string;
+  href?: string;
   /**
    * Where the card sends you. A boolean public/private cannot express a store
    * listing for a project whose source stays closed, so this is an enum.
    */
-  link: "source" | "store" | "contact";
+  link: "source" | "store" | "site" | "soon";
 };
 
 /** One depth-layered project pane with pointer tilt + glow trail. */
 function WorkPane({ item, index }: { item: WorkItem; index: number }) {
-  const { ref, onPointerMove, onPointerLeave } = useSpatialPointer<HTMLAnchorElement>(7);
+  const { ref, onPointerMove, onPointerLeave } = useSpatialPointer<HTMLElement>(7);
   const depth = index % 2 === 0 ? "near" : "far";
   const cta = {
     source: { label: "Source", icon: "github", cursor: "Source", hint: "View source on GitHub" },
@@ -113,29 +119,22 @@ function WorkPane({ item, index }: { item: WorkItem; index: number }) {
       cursor: "Install",
       hint: "View on Google Play",
     },
-    contact: { label: "Private · ask me", icon: "mail", cursor: "Ask", hint: "" },
+    site: {
+      label: "Website",
+      icon: "arrow",
+      cursor: "Visit",
+      hint: "Visit website",
+    },
+    soon: {
+      label: "Coming soon",
+      icon: "arrow",
+      cursor: "Soon",
+      hint: "Not yet released",
+    },
   }[item.link];
-  const external = item.link !== "contact";
 
-  return (
-    <a
-      ref={ref}
-      id={item.id}
-      href={item.href}
-      {...(external ? { target: "_blank", rel: "noreferrer noopener" } : {})}
-      data-cursor={cta.cursor}
-      data-depth={depth}
-      className="work-pane spatial-interactive"
-      style={{ ["--pane-delay" as string]: `${index * 0.09}s` }}
-      aria-label={
-        external
-          ? `${item.title} — ${item.tag}, ${item.year}. ${cta.hint} (opens in a new tab).`
-          : `${item.title} — ${item.tag}, ${item.year}. Private repository — get in touch to discuss it.`
-      }
-      onPointerMove={onPointerMove}
-      onPointerLeave={onPointerLeave}
-      onBlur={onPointerLeave}
-    >
+  const content = (
+    <>
       <span className="work-pane__trail" aria-hidden />
       <span className="work-pane__inner">
         <span className="work-pane__top">
@@ -159,13 +158,54 @@ function WorkPane({ item, index }: { item: WorkItem; index: number }) {
             <span className="eyebrow">{item.tag}</span>
             <span className="work-pane__cta eyebrow">
               {cta.label}
-              <span className="work-pane__arrow" aria-hidden>
-                <AnimatedIcon name={cta.icon} size={14} />
-              </span>
+              {item.link !== "soon" && (
+                <span className="work-pane__arrow" aria-hidden>
+                  <AnimatedIcon name={cta.icon} size={14} />
+                </span>
+              )}
             </span>
           </span>
         </span>
       </span>
+    </>
+  );
+
+  if (item.link === "soon") {
+    return (
+      <div
+        ref={ref as React.Ref<HTMLDivElement>}
+        id={item.id}
+        role="group"
+        data-depth={depth}
+        className="work-pane spatial-interactive"
+        style={{ ["--pane-delay" as string]: `${index * 0.09}s` }}
+        aria-label={`${item.title} — ${item.tag}, ${item.year}. Not yet released.`}
+        onPointerMove={onPointerMove}
+        onPointerLeave={onPointerLeave}
+        onBlur={onPointerLeave}
+      >
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <a
+      ref={ref as React.Ref<HTMLAnchorElement>}
+      id={item.id}
+      href={item.href}
+      target="_blank"
+      rel="noreferrer noopener"
+      data-cursor={cta.cursor}
+      data-depth={depth}
+      className="work-pane spatial-interactive"
+      style={{ ["--pane-delay" as string]: `${index * 0.09}s` }}
+      aria-label={`${item.title} — ${item.tag}, ${item.year}. ${cta.hint} (opens in a new tab).`}
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
+      onBlur={onPointerLeave}
+    >
+      {content}
     </a>
   );
 }

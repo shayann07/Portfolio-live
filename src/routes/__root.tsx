@@ -81,60 +81,51 @@ const SITE_URL = "https://shayxo.dev";
  */
 const PROJECT_SCHEMA = [
   {
+    name: "UrduCanvas",
+    description:
+      "Urdu text-on-photo design editor drawn entirely on Canvas with Kasheeda and RTL typography.",
+    languages: ["Kotlin"],
+    keywords: ["Kotlin Multiplatform", "Canvas", "Android", "Design"],
+    url: "https://play.google.com/store/apps/details?id=com.webscare.urducanvas&hl=en-US",
+  },
+  {
+    name: "InvoiceOne",
+    description:
+      "Local-first invoicing on a 50+ module Kotlin Multiplatform build across Android, iOS, desktop and web.",
+    languages: ["Kotlin"],
+    keywords: ["Kotlin Multiplatform", "Compose Multiplatform", "MVI", "Clean Architecture"],
+    url: undefined,
+  },
+  {
+    name: "liquidglass",
+    description:
+      "Liquid Glass for Compose Multiplatform with real refraction, dispersion and rim lighting in one shader.",
+    languages: ["Kotlin"],
+    keywords: ["Compose Multiplatform", "AGSL", "Skia", "Shaders", "Open source"],
+    url: "https://github.com/shayann07/liquidglass",
+  },
+  {
+    name: "Upscaly",
+    description:
+      "Free, offline AI image and video upscaling on your own GPU with Real-ESRGAN, Vulkan and ncnn.",
+    languages: ["Kotlin", "Rust", "C++"],
+    keywords: ["Real-ESRGAN", "Vulkan", "ncnn", "Desktop", "Android"],
+    url: "https://github.com/shayann07/Upscaly",
+  },
+  {
+    name: "Urdu Speech to Text",
+    description: "Voice transcription for Urdu, live on Google Play with 10K+ installs.",
+    languages: ["Kotlin"],
+    keywords: ["Android", "Speech Recognition", "Voice", "Google Play"],
+    url: "https://play.google.com/store/apps/details?id=com.webscare.urduspeechtotext&hl=en-US",
+  },
+  {
     name: "Medly",
     description:
       "Prescription scanning with Gemini OCR, RxNorm drug verification, and two-stage dose reminders.",
     languages: ["Kotlin"],
     keywords: ["Android", "Gemini", "Room", "AlarmManager"],
-    url: undefined,
-  },
-  {
-    name: "InvoiceOne",
-    description:
-      "Local-first invoicing on a 34-module Kotlin Multiplatform build targeting Android, desktop, web and iOS.",
-    languages: ["Kotlin"],
-    keywords: ["Kotlin Multiplatform", "Jetpack Compose", "Room", "Dagger Hilt"],
-    url: undefined,
-  },
-  {
-    name: "LeafBloom",
-    description:
-      "On-device crop disease and pest diagnosis with PyTorch Mobile inference under 50ms per frame.",
-    languages: ["Kotlin"],
-    keywords: ["PyTorch Mobile", "CameraX", "Gemini", "On-device ML"],
-    url: undefined,
-  },
-  {
-    name: "Upscaly",
-    description:
-      "Open-source Real-ESRGAN image and video upscaling that runs entirely on the user's own GPU.",
-    languages: ["TypeScript", "Rust"],
-    keywords: ["Real-ESRGAN", "Tauri", "React", "Vulkan", "ncnn"],
-    url: "https://github.com/shayann07/Upscaly",
-  },
-  {
-    name: "StreamBox",
-    description:
-      "IPTV and VOD across phone, tablet, Android TV and Fire TV on a Media3 pipeline, with a CodeIgniter 4 panel.",
-    languages: ["Kotlin", "PHP"],
-    keywords: ["Media3", "ExoPlayer", "CodeIgniter", "IPTV"],
-    url: undefined,
-  },
-  {
-    name: "Medicare",
-    description:
-      "Flutter telehealth with specialist booking, native Stripe checkout, and a GPT-4o-mini triage assistant.",
-    languages: ["Dart"],
-    keywords: ["Flutter", "GetX", "Stripe", "Firebase"],
-    url: "https://github.com/shayann07/medicare_app_flutter",
-  },
-  {
-    name: "GitPulse",
-    description:
-      "Schedules GitHub commits from Android using OAuth with the token sealed in EncryptedSharedPreferences.",
-    languages: ["Kotlin"],
-    keywords: ["GitHub OAuth", "WorkManager", "Android"],
-    url: undefined,
+    url: "https://play.google.com/store/apps/details?id=com.medly.reminder&hl=en-US",
   },
 ].map((p, i) => ({
   "@type": "SoftwareSourceCode",
@@ -161,7 +152,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:image", content: `${SITE_URL}/og-image.png` },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
-      { property: "og:image:alt", content: "Muhammad Shayan — Software Engineer" },
+      { property: "og:image:alt", content: "Muhammad Shayan — Kotlin Multiplatform Developer" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: `${SITE_URL}/og-image.png` },
     ],
@@ -183,7 +174,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
               "@type": "ProfilePage",
               "@id": `${SITE_URL}/#page`,
               url: SITE_URL,
-              name: "Muhammad Shayan — Software Engineer",
+              name: "Muhammad Shayan — Kotlin Multiplatform Developer",
               isPartOf: { "@id": `${SITE_URL}/#website` },
               about: { "@id": `${SITE_URL}/#person` },
               inLanguage: "en",
@@ -193,22 +184,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
               "@type": "Person",
               "@id": `${SITE_URL}/#person`,
               name: "Muhammad Shayan",
-              jobTitle: "Software Engineer",
+              jobTitle: "Kotlin Multiplatform Developer",
               url: SITE_URL,
               image: `${SITE_URL}/og-image.png`,
               email: "mailto:hello@shayxo.dev",
               sameAs: ["https://github.com/shayann07", "https://www.linkedin.com/in/shayann07"],
               description:
-                "Software engineer shipping product systems end to end — Kotlin Multiplatform clients, backend services, payment rails, and on-device ML.",
+                "Kotlin Multiplatform developer shipping apps that share one codebase across Android, iOS, desktop and web. 8 apps on Google Play with 70K+ installs.",
               knowsAbout: [
                 "Kotlin Multiplatform",
+                "Compose Multiplatform",
                 "Kotlin",
                 "Jetpack Compose",
-                "Flutter",
-                "Node.js",
-                "Firebase",
-                "On-device machine learning",
-                "Payment integration",
+                "Ktor",
+                "SQLDelight",
+                "Coroutines",
+                "Open source",
               ],
               address: {
                 "@type": "PostalAddress",

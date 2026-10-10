@@ -107,7 +107,7 @@ export function SpatialCluster() {
             ))}
           </div>
           <ul className="spatial-slab__rows">
-            {["Kotlin Multiplatform", "Node & Firebase", "On-device ML"].map((t, i) => (
+            {["Kotlin Multiplatform", "Compose Multiplatform", "Ktor & SQLDelight"].map((t, i) => (
               <li key={t} style={{ animationDelay: `${i * 0.9}s` }}>
                 <i />
                 <span className="spatial__label">{t}</span>
